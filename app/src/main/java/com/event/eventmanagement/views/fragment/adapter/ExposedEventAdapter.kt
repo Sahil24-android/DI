@@ -84,7 +84,6 @@ class ExposedEventAdapter(private val context: Context):RecyclerView.Adapter<Exp
         } else {
             holder.binding.eventItem.visibility = View.VISIBLE
         }
-
         holder.binding.advanceAmount.text = "₹${current.advanceAmount}"
 
         val adapter = PaymentsAdapter(context)
