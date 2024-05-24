@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:weightSum="4">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/sequence"
+        android:layout_width="match_parent"
+        android:layout_weight="1.2"
+        android:padding="@dimen/_5sdp"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/paymentDate"
+        android:layout_weight="0.8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/paymentAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:padding="@dimen/_5sdp" />
+    <ImageView
+        android:id="@+id/pdfDownload"
+        android:layout_width="match_parent"
+        android:layout_weight="1.2"
+        android:padding="@dimen/_5sdp"
+        android:src="@drawable/baseline_attach_file_24"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

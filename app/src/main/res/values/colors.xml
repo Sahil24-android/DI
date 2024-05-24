@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="statusBarColor">#4793AF</color>
+    <color name="disable">#465C5858</color>
+    <color name="blueColorDark">#008DDA</color>
+    <color name="blueColorLight">#41C9E2</color>
+    <color name="button_background1">#0766AD</color>
+    <color name="error_red">#B80000</color>
+    <color name="green_pays">#2b864f</color>
+    <color name="text_header">#b8b8b8</color>
+    <color name="calendar_background">#F3087E9C</color>
+</resources>

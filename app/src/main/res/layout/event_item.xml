@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/_5sdp"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="@dimen/_10sdp"
+    app:cardCornerRadius="@dimen/_10sdp"
+    android:layout_height="wrap_content">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/_5sdp"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_height="wrap_content">
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:padding="@dimen/_5sdp"
+        android:text="Event Name"
+        android:layout_weight="1.2"
+        android:layout_height="wrap_content"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:id="@+id/eventName"
+            android:layout_weight="0.8"
+            android:padding="@dimen/_5sdp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_height="wrap_content">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:padding="@dimen/_5sdp"
+        android:text="Event Description"
+        android:textAllCaps="true"
+        android:layout_weight="1.2"
+        android:layout_height="wrap_content"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/eventDescription"
+            android:layout_width="match_parent"
+            android:padding="@dimen/_5sdp"
+            android:textAllCaps="true"
+            android:layout_weight="0.8"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/dashBoard"
+        android:title="DashBoard" />
+    <item
+        android:id="@+id/gallery"
+        android:title="Event Gallery" />
+
+    <item
+        android:id="@+id/expenses"
+        android:title="Expenses" />
+
+    <item
+        android:id="@+id/eventMaster"
+        android:title="Event Master" />
+
+    <item
+        android:id="@+id/packageMaster"
+        android:title="Package Master" />
+    <item
+        android:id="@+id/employee"
+        android:title="Employee" />
+    <item
+        android:id="@+id/logout"
+        android:title="Logout" />
+
+    <!--    <item-->
+    <!--        android:id="@+id/socket"-->
+    <!--        android:title="WebSocket"/>-->
+
+</menu>
