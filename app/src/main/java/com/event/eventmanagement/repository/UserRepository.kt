@@ -196,7 +196,7 @@ class UserRepository() {
         }
     }
 
-    suspend fun getAllEvents(vendorId:String): Result<GetCustomerEventDataList> {
+    suspend fun getAllEvents(vendorId: String): Result<GetCustomerEventDataList> {
         return try {
             val response = apiInterface.getAllCustomerEvents(vendorId)
             if (response.isSuccessful) {
@@ -222,9 +222,9 @@ class UserRepository() {
         }
     }
 
-    suspend fun getEventByDate(date: String,vendorId: String): Result<GetCustomerEventDataList> {
+    suspend fun getEventByDate(date: String, vendorId: String): Result<GetCustomerEventDataList> {
         return try {
-            val response = apiInterface.getEventByDate(date,vendorId)
+            val response = apiInterface.getEventByDate(date, vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -290,59 +290,76 @@ class UserRepository() {
     }
 
 
-    suspend fun updatePdfUrl(pdfBody: PdfBody):Result<ResponseBody?>{
+    suspend fun updatePdfUrl(pdfBody: PdfBody): Result<ResponseBody> {
         return try {
             val response = apiInterface.updatePdfUrl(pdfBody)
-            if (response.isSuccessful){
-                Result.Success(response.body())
-            }else{
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
                 Result.Error("Failed to get services: ${response.message()}")
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Result.Error("Exception occurred: ${e.message}")
         }
     }
 
-    suspend fun getAllVendors():Result<VendorListResponse?>{
+    suspend fun getAllVendors(): Result<VendorListResponse> {
         return try {
             val response = apiInterface.getAllVendors()
-            if (response.isSuccessful){
-                Result.Success(response.body())
-            }else{
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
                 Result.Error("Failed to get services: ${response.message()}")
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Result.Error("Exception occurred: ${e.message}")
         }
     }
 
 
-    suspend fun transferEvent(exposedBody: ExposedBody):Result<ExposedResponse?>{
+    suspend fun transferEvent(exposedBody: ExposedBody): Result<ExposedResponse> {
         return try {
             val response = apiInterface.transferEvent(exposedBody)
-            if (response.isSuccessful){
-                Result.Success(response.body())
-            }else{
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
                 Result.Error("Failed to get services: ${response.message()}")
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Result.Error("Exception occurred: ${e.message}")
         }
     }
 
 
-    suspend fun eventExposedByMe(vendorId: String):Result<GetCustomerEventDataList?>{
+    suspend fun eventExposedByMe(vendorId: String): Result<GetCustomerEventDataList> {
         return try {
             val response = apiInterface.eventExposedByMe(vendorId)
-            if (response.isSuccessful){
-                Result.Success(response.body())
-            }else{
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
                 Result.Error("Failed to get services: ${response.message()}")
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Result.Error("Failed to get services: ${e.message}")
         }
     }
+
+    suspend fun eventExposedToMe(vendorId: String): Result<GetCustomerEventDataList> {
+        return try {
+            val response = apiInterface.eventExposedToMe(vendorId)
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
+                Result.Error("Failed to get services: ${response.message()}")
+            }
+
+        }catch (e:Exception){
+            Result.Error("Failed to get services: ${e.message}")
+    }
+
+}
+
+
 
 
 

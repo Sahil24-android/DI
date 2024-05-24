@@ -152,7 +152,7 @@ interface ApiServices {
         @Path("vendorId") vendor_id: String
     ):Response<GetCustomerEventDataList>
 
-    @GET("event/ExposedTo/{vendorId")
+    @GET("event/ExposedTo/{vendorId}")
     suspend fun eventExposedToMe(
         @Path("vendorId") vendor_id: String
     ):Response<GetCustomerEventDataList>

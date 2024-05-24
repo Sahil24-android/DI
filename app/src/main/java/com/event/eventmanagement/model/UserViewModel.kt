@@ -395,4 +395,22 @@ class UserViewModel : ViewModel() {
             _isLoading.value = false
         }
     }
+
+    private val _eventExposedToMe: MutableLiveData<GetCustomerEventDataList> = MutableLiveData()
+    val eventExposedToMe: MutableLiveData<GetCustomerEventDataList> get() = _eventExposedToMe
+
+    fun eventExposedToMe(vendorId: String){
+        viewModelScope.launch {
+            _isLoading.value = false
+            val result = repository.eventExposedToMe(vendorId)
+            if (result is Result.Success) {
+                _eventExposedToMe.value = result.value
+                _isLoading.value = false
+            }else if (result is Result.Error) {
+                _error.value = result.message
+                _isLoading.value = false
+            }
+            _isLoading.value = false
+            }
+    }
 }

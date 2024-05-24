@@ -17,6 +17,7 @@ import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.addeventPayments.AddPaymentActivity
 import com.event.eventmanagement.views.activity.customerEventList.adapter.CustomerEventAdapter
+import com.event.eventmanagement.views.activity.customerEventList.adapter.CustomerExposedEventAdapter
 import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.activity.exposed.ExposingEventActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -24,8 +25,9 @@ import com.google.android.material.textview.MaterialTextView
 
 class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener {
     private lateinit var binding: ActivityEventBinding
-    private lateinit var viewModel: UserViewModel
+    private lateinit var userViewModel: UserViewModel
     private lateinit var adapter: CustomerEventAdapter
+    private lateinit var exposedEventAdapter: CustomerExposedEventAdapter
     private lateinit var preferenceManager: PreferenceManager
     private var currentPosition = 0
     private var date: String? = null
@@ -40,7 +42,7 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 //            insets
 //        }
 
-        viewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         adapter = CustomerEventAdapter(this, this)
         preferenceManager = PreferenceManager(this)
         binding.eventRecyclerView.layoutManager =
@@ -49,12 +51,20 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.eventRecyclerView)
 
+        exposedEventAdapter = CustomerExposedEventAdapter(this)
+        preferenceManager = PreferenceManager(this)
+        binding.exposedEventRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.exposedEventRecyclerView.adapter = exposedEventAdapter
+//        val snapHelper2 = PagerSnapHelper()
+//        snapHelper2.attachToRecyclerView(binding.eventRecyclerView)
 
 
+
 //
 //
 //
-        viewModel.getAllCustomerEvents.observe(this) {
+        userViewModel.getAllCustomerEvents.observe(this) {
             if (it.data.isNotEmpty()) {
                 adapter.updateList(it.data)
             } else {
@@ -62,8 +72,39 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
             }
         }
 
+        binding.exposedEventsTab.setOnClickListener {
+            binding.exposedLayout.visibility = View.VISIBLE
+            binding.eventLayout.visibility = View.GONE
+
+            binding.exposedEventsTab.setBackgroundColor(resources.getColor(R.color.blueColorDark))
+            binding.exposedEventsTab.setTextColor(resources.getColor(R.color.white))
+            binding.myEventTab.setBackgroundColor(resources.getColor(R.color.white))
+            binding.myEventTab.setTextColor(resources.getColor(R.color.black))
+            userViewModel.eventExposedToMe(preferenceManager.getVendorId().toString())
+        }
+
+
+
+        userViewModel.eventExposedToMe.observe(this){
+            if (it.data.isNotEmpty()){
+                exposedEventAdapter.updateList(it.data)
+            }else{
+                Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+        binding.myEventTab.setOnClickListener {
+            binding.exposedLayout.visibility = View.GONE
+            binding.eventLayout.visibility = View.VISIBLE
+            binding.myEventTab.setBackgroundColor(resources.getColor(R.color.blueColorDark))
+            binding.myEventTab.setTextColor(resources.getColor(R.color.white))
+            binding.exposedEventsTab.setBackgroundColor(resources.getColor(R.color.white))
+            binding.exposedEventsTab.setTextColor(resources.getColor(R.color.black))
+        }
+
         binding.swipeToRefresh.setOnRefreshListener {
-            viewModel.getAllEvents(preferenceManager.getVendorId().toString())
+            userViewModel.getAllEvents(preferenceManager.getVendorId().toString())
             binding.swipeToRefresh.isRefreshing = false
         }
 
@@ -73,7 +114,7 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 
         date = intent.getStringExtra("date")
 //        viewModel.getEventByDate(date!!)
-        viewModel.getEventByDate.observe(this) {
+        userViewModel.getEventByDate.observe(this) {
             if (it.data.isNotEmpty()) {
                 adapter.updateList(it.data)
             } else {
@@ -167,17 +208,19 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 
     override fun onResume() {
         if (date.toString() == "showAll") {
-            viewModel.getAllEvents(preferenceManager.getVendorId().toString())
+            userViewModel.getAllEvents(preferenceManager.getVendorId().toString())
             binding.fromPayments.visibility = View.GONE
         } else if (date.toString() == "payment") {
             binding.fromPayments.visibility = View.VISIBLE
-            viewModel.getAllEvents(preferenceManager.getVendorId().toString())
+            binding.tabLayout
+                .visibility = View.GONE
+            userViewModel.getAllEvents(preferenceManager.getVendorId().toString())
         } else if (date.toString().contains("From Customer")) {
             Log.d("date",date.toString())
             val customerId = date.toString().split(" ")[2]
-            viewModel.getEventByCustomer(customerId)
+            userViewModel.getEventByCustomer(customerId)
         }else{
-            viewModel.getEventByDate(date!!,preferenceManager.getVendorId().toString())
+            userViewModel.getEventByDate(date!!,preferenceManager.getVendorId().toString())
             binding.fromPayments.visibility = View.GONE
         }
         super.onResume()

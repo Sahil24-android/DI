@@ -8,8 +8,10 @@
     android:orientation="vertical"
     tools:context=".views.activity.profile.ProfileActivity">
 
-
-
-
-
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/number"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,9 +7,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.ActivityProfileBinding
+import com.event.eventmanagement.usersession.PreferenceManager
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
+    private lateinit var preferenceManager: PreferenceManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -20,5 +22,11 @@ class ProfileActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        preferenceManager = PreferenceManager(this)
+
+        binding.number.text = preferenceManager.getUserData()!!.mobNo
+
+
     }
 }

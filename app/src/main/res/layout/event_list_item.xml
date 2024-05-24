@@ -93,6 +93,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/custom_date_item" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/hideThisLayoutForExposed"
+                android:layout_height="wrap_content">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
@@ -332,6 +337,8 @@
                 style="@style/ButtonStyle"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_height="wrap_content"/>
+
+            </LinearLayout>
 
 
         </LinearLayout>

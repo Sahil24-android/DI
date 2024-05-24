@@ -66,43 +66,30 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().length == 10) {
-                    for (item in vendorList) {
-                        if (item.mobNo == s.toString()) {
-                            Toast.makeText(
-                                this@ExposingEventActivity,
-                                "Vendor Found",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            binding.vendorDetailLayout.visibility = View.VISIBLE
+                    val listFilter = vendorList.filter { it.mobNo == s.toString() }
 
-                            binding.vendorName.text = item.ownerName
-                            binding.vendorAddress.text = item.address
-                            binding.contactDetails.text = "${item.mobNo}"
-                            binding.companyName.text = item.companyName
+                    binding.vendorDetailLayout.visibility = View.VISIBLE
 
-                            sendToVendor = item.id!!
-                        } else {
-                            Toast.makeText(
-                                this@ExposingEventActivity,
-                                "Vendor Not Found",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            binding.vendorDetailLayout.visibility = View.GONE
-                            binding.vendorName.text = null
-                            binding.vendorAddress.text = null
-                            binding.contactDetails.text = null
-                            binding.companyName.text = null
-                        }
-                    }
+                    binding.vendorName.text = listFilter[0].ownerName
+                    binding.vendorAddress.text = listFilter[0].address
+                    binding.contactDetails.text = "${listFilter[0].mobNo}"
+                    binding.companyName.text = listFilter[0].companyName
+
+                    sendToVendor = listFilter[0].id!!
                 } else {
-                    binding.vendorDetailLayout.visibility = View.GONE
                     Toast.makeText(
                         this@ExposingEventActivity,
-                        "Incorrect Number",
+                        "Vendor Not Found",
                         Toast.LENGTH_SHORT
                     ).show()
+                    // binding.vendorDetailLayout.visibility = View.GONE
+                    binding.vendorName.text = null
+                    binding.vendorAddress.text = null
+                    binding.contactDetails.text = null
+                    binding.companyName.text = null
                 }
             }
+
 
         })
 
@@ -115,7 +102,7 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
         binding.eventDateRecycler.layoutManager = LinearLayoutManager(this)
         val adapter = CustomerDateEventAdapter(eventData.eventDates)
         binding.eventDateRecycler.adapter = adapter
-        
+
 
 
         binding.exposeAmount.addTextChangedListener(object : TextWatcher {
@@ -158,11 +145,11 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
         }
 
 
-        userViewModel.eventTransferResponse.observe(this){response ->
-            if (response.Transfer != null){
+        userViewModel.eventTransferResponse.observe(this) { response ->
+            if (response.Transfer != null) {
                 finish()
-            }else{
-                Toast.makeText(this,"Enable To Procees",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Enable To Procees", Toast.LENGTH_SHORT).show()
             }
         }
     }

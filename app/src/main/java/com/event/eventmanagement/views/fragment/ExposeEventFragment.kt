@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.event.eventmanagement.R
+import com.event.eventmanagement.MainActivity
 import com.event.eventmanagement.databinding.FragmentExposeEventBinding
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
@@ -33,6 +33,7 @@ class ExposeEventFragment : Fragment() {
        binding = FragmentExposeEventBinding.inflate(inflater,container,false)
         userViewModel = ViewModelProvider(this)[UserViewModel::class]
         preferenceManager = PreferenceManager(requireContext())
+        (activity as MainActivity).hideToolbar()
         return binding.root
     }
 
@@ -52,6 +53,10 @@ class ExposeEventFragment : Fragment() {
             }
         }
 
+
+        binding.back.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
 
     }
 
