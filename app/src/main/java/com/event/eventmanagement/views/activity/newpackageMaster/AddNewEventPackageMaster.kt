@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.ActivityAddNewEventPackageMasterBinding
 import com.event.eventmanagement.model.UserViewModel
+import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
@@ -21,15 +22,19 @@ class AddNewEventPackageMaster : AppCompatActivity() {
     private lateinit var binding: ActivityAddNewEventPackageMasterBinding
     private val checkedEventItem: ArrayList<String> = ArrayList()
     private lateinit var userViewModel: UserViewModel
+    private lateinit var preferenceManager: PreferenceManager
+    private var vendorId:String?= null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddNewEventPackageMasterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        preferenceManager  = PreferenceManager(this)
 
+        vendorId = preferenceManager.getVendorId().toString()
 
-        userViewModel.getEvents()
+        userViewModel.getEvents(vendorId!!)
         val map: HashMap<String, Int> = HashMap()
         val listEvent = ArrayList<String>()
         userViewModel.getAllEventsResponse.observe(this) { result ->
@@ -66,7 +71,9 @@ class AddNewEventPackageMaster : AppCompatActivity() {
                 packageName = packageName,
                 description = packageDescription,
                 amount = packageAmount.toInt(),
-                eventId = builder.substring(0, builder.length - 1).toString()
+                eventId = builder.substring(0, builder.length - 1).toString(),
+                vendorId = vendorId!!.toInt()
+
             )
             userViewModel.createPackage(packageBody)
             Log.d(

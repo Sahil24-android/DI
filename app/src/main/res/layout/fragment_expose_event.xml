@@ -52,6 +52,7 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/swipeToRefresh"
         app:layout_constraintTop_toTopOf="parent">
 
     <androidx.core.widget.NestedScrollView

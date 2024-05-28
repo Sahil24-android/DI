@@ -67,20 +67,29 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().length == 10) {
                     val listFilter = vendorList.filter { it.mobNo == s.toString() }
+                    if (listFilter.isNotEmpty()) {
+                        binding.vendorDetailLayout.visibility = View.VISIBLE
 
-                    binding.vendorDetailLayout.visibility = View.VISIBLE
+                        binding.vendorName.text = listFilter[0].ownerName
+                        binding.vendorAddress.text = listFilter[0].address
+                        binding.contactDetails.text = "${listFilter[0].mobNo}"
+                        binding.companyName.text = listFilter[0].companyName
 
-                    binding.vendorName.text = listFilter[0].ownerName
-                    binding.vendorAddress.text = listFilter[0].address
-                    binding.contactDetails.text = "${listFilter[0].mobNo}"
-                    binding.companyName.text = listFilter[0].companyName
-
-                    sendToVendor = listFilter[0].id!!
+                        sendToVendor = listFilter[0].id!!
+                    } else {
+                        binding.vendorDetailLayout.visibility = View.GONE
+                        binding.vendorName.text = null
+                        binding.vendorAddress.text = null
+                        binding.contactDetails.text = null
+                        binding.companyName.text = null
+                        sendToVendor = 0
+                        Toast.makeText(
+                            this@ExposingEventActivity, "Vendor Not Found", Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 } else {
                     Toast.makeText(
-                        this@ExposingEventActivity,
-                        "Vendor Not Found",
-                        Toast.LENGTH_SHORT
+                        this@ExposingEventActivity, "Vendor Not Found", Toast.LENGTH_SHORT
                     ).show()
                     // binding.vendorDetailLayout.visibility = View.GONE
                     binding.vendorName.text = null
@@ -133,15 +142,25 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
 
 
         binding.exposeEventButton.setOnClickListener {
-            val exposedBody = ExposedBody(
-                eventData.id,
-                preferenceManager.getVendorId(),
-                sendToVendor,
-                eventData.finalAmount,
-                binding.exposeAmount.text.toString().toInt()
-            )
+            if (sendToVendor == 0) {
+                Toast.makeText(this, "Select Vendor", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            } else if (binding.actualPrice.text.toString().replace("\u20b9 ", "")
+                    .toInt() < binding.exposeAmount.text.toString().toInt()
+            ) {
+                Toast.makeText(this, "Amount Exceed", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            } else {
+                val exposedBody = ExposedBody(
+                    eventData.id,
+                    preferenceManager.getVendorId(),
+                    sendToVendor,
+                    eventData.finalAmount,
+                    binding.exposeAmount.text.toString().toInt()
+                )
 
-            userViewModel.transferEvent(exposedBody)
+                userViewModel.transferEvent(exposedBody)
+            }
         }
 
 

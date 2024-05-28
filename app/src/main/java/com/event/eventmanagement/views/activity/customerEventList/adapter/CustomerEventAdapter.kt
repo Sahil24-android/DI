@@ -9,6 +9,7 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -87,6 +88,21 @@ class CustomerEventAdapter(private val context: Context, private val listener: O
         adapter.updateList(current.eventPayment)
         holder.paymentsRecycler.setHasFixedSize(true)
 
+        if (current.isTransfer==1){
+            holder.exposeEvent.visibility = View.GONE
+            holder.exposedEventText.visibility = View.VISIBLE
+        }else{
+            holder.exposeEvent.visibility = View.VISIBLE
+            holder.exposedEventText.visibility = View.GONE
+        }
+
+        holder.showMore.setOnClickListener {
+            if (holder.hideAndShow.visibility == View.VISIBLE) {
+                holder.hideAndShow.visibility = View.GONE
+            } else {
+                holder.hideAndShow.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -106,7 +122,7 @@ class CustomerEventAdapter(private val context: Context, private val listener: O
         val dateRecyclerView: RecyclerView = itemView.findViewById(R.id.eventDateRecycler)
         val finalAmountAfterDiscount: MaterialTextView = itemView.findViewById(R.id.finalAmount)
         val eventPackageName: MaterialTextView = itemView.findViewById(R.id.eventPackageName)
-
+        val showMore:ImageButton = itemView.findViewById(R.id.showMore)
         //        val showPayments:LinearLayout = itemView.findViewById(R.id.paymentsLayout)
         val view: ShapeableImageView = itemView.findViewById(R.id.view)
         val remainingAmount: MaterialTextView = itemView.findViewById(R.id.remainingAmount)
@@ -114,20 +130,23 @@ class CustomerEventAdapter(private val context: Context, private val listener: O
         val paymentsLayout: LinearLayout = itemView.findViewById(R.id.paymentsLayout)
         val paymentsRecycler: RecyclerView = itemView.findViewById(R.id.paymentRecycler)
         val advanceAmount: MaterialTextView = itemView.findViewById(R.id.advanceAmount)
-        val exposeEvent:MaterialButton = itemView.findViewById(R.id.exposeEvent)
+        val exposeEvent: ImageButton = itemView.findViewById(R.id.exposeEvent)
+        val exposedEventText:MaterialTextView = itemView.findViewById(R.id.exposedEventText)
+        val hideAndShow:LinearLayout = itemView.findViewById(R.id.hideThisLayoutForExposed)
+
         init {
             eventItem.setOnClickListener {
                 listener.actionItemClick(adapterPosition, list[adapterPosition])
             }
             exposeEvent.setOnClickListener {
-                listener.exposeEvent(adapterPosition,list[adapterPosition])
+                listener.exposeEvent(adapterPosition, list[adapterPosition])
             }
         }
     }
 
     interface OnClickListener {
         fun actionItemClick(position: Int, item: EventData)
-        fun exposeEvent(position: Int,item: EventData)
+        fun exposeEvent(position: Int, item: EventData)
     }
 
 }

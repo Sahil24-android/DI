@@ -39,9 +39,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/actionBar">
 
-        <!--    <androidx.core.widget.NestedScrollView-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="match_parent">-->
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
 
         <LinearLayout
@@ -85,7 +85,11 @@
                     android:text="Exposed Events"
                     android:textSize="@dimen/_12sdp" />
             </LinearLayout>
-
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:padding="@dimen/_5sdp"
+                android:text="Check exposed event tab. If having event on same date"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:id="@+id/eventLayout"
                 android:layout_width="match_parent"
@@ -95,6 +99,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:id="@+id/myEventsSwitches"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10sdp"
@@ -180,7 +185,7 @@
             </LinearLayout>
 
         </LinearLayout>
-        <!--    </androidx.core.widget.NestedScrollView>-->
+            </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 

@@ -11,4 +11,6 @@
     <color name="green_pays">#2b864f</color>
     <color name="text_header">#b8b8b8</color>
     <color name="calendar_background">#F3087E9C</color>
+    <color name="colorSelected">#FF0000</color> <!-- Red for selected -->
+    <color name="colorUnselected">#00FF00</color> <!-- Green for unselected -->
 </resources>

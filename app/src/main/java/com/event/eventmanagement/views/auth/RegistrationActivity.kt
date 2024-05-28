@@ -79,8 +79,6 @@ class RegistrationActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
             }
-
-
         }
 
         binding.selectServiceType.setOnItemClickListener { parent, view, position, id ->
@@ -159,46 +157,56 @@ class RegistrationActivity : AppCompatActivity() {
 
         binding.register.setOnClickListener {
             if (fieldValidation()) {
-                if (binding.password.text.toString() == binding.confirmPassword.text.toString()) {
-                    val filesDir = applicationContext.filesDir
-                    val file = File(filesDir, "image.png")
-                    val part: MultipartBody.Part
-                    if (imageUri != null) {
-                        val inputStream = contentResolver.openInputStream(imageUri!!)
-                        val outputStream = FileOutputStream(file)
-                        inputStream!!.copyTo(outputStream)
-                        val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
-                        part =
-                            MultipartBody.Part.createFormData("logo_image", file.name, requestBody)
-                    } else {
-                        val requestBody =
-                            "".toRequestBody("multipart/form-data".toMediaTypeOrNull())
-                        part = MultipartBody.Part.createFormData("logo_image", "", requestBody)
-                    }
-                    val data = RegistrationDataSend(
-                        binding.companyName.text.toString(),
-                        binding.ownerName.text.toString(),
-                        binding.mobileNumber.text.toString(),
-                        if (binding.alternateMobileNumber.text.toString().isEmpty()) {
-                            binding.mobileNumber.text.toString()
+                if (binding.mobileNumber.text.toString().length == 10 && binding.alternateMobileNumber.text.toString().length == 10) {
+                    if (binding.password.text.toString() == binding.confirmPassword.text.toString()) {
+                        val filesDir = applicationContext.filesDir
+                        val file = File(filesDir, "image${System.currentTimeMillis()}.png")
+                        val part: MultipartBody.Part
+                        if (imageUri != null) {
+                            val inputStream = contentResolver.openInputStream(imageUri!!)
+                            val outputStream = FileOutputStream(file)
+                            inputStream!!.copyTo(outputStream)
+                            val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+                            part =
+                                MultipartBody.Part.createFormData(
+                                    "logo_image",
+                                    file.name,
+                                    requestBody
+                                )
                         } else {
-                            binding.alternateMobileNumber.text.toString()
-                        },
-                        binding.address.text.toString(),
-                        binding.selectPinCode.text.toString(),
-                        binding.city.text.toString(),
-                        binding.state.text.toString(),
-                        binding.country.text.toString(),
-                        serviceId.toString(),
-                        servicePackageId.toString(),
-                        binding.confirmPassword.text.toString(),
-                    )
-                    userViewModel.registerUser(data, part)
+                            val requestBody =
+                                "".toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                            part = MultipartBody.Part.createFormData("logo_image", "", requestBody)
+                        }
+                        val data = RegistrationDataSend(
+                            binding.companyName.text.toString(),
+                            binding.ownerName.text.toString(),
+                            binding.mobileNumber.text.toString(),
+                            if (binding.alternateMobileNumber.text.toString().isEmpty()) {
+                                binding.mobileNumber.text.toString()
+                            } else {
+                                binding.alternateMobileNumber.text.toString()
+                            },
+                            binding.address.text.toString(),
+                            binding.selectPinCode.text.toString(),
+                            binding.city.text.toString(),
+                            binding.state.text.toString(),
+                            binding.country.text.toString(),
+                            serviceId.toString(),
+                            servicePackageId.toString(),
+                            binding.confirmPassword.text.toString(),
+                        )
+                        userViewModel.registerUser(data, part)
+                    } else {
+                        Toast.makeText(this, "Password not match", Toast.LENGTH_SHORT).show()
+
+                    }
                 } else {
-                    Toast.makeText(this, "Password not match", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Check Contact Number", Toast.LENGTH_SHORT).show()
+
                 }
-            }else{
-                Snackbar.make(it,"All Fields Are Mandatory",Snackbar.LENGTH_SHORT).show()
+            } else {
+                Snackbar.make(it, "All Fields Are Mandatory", Snackbar.LENGTH_SHORT).show()
             }
 
         }
@@ -246,14 +254,14 @@ class RegistrationActivity : AppCompatActivity() {
                         binding.state.text = data.State
                         binding.city.text = data.Region
                         binding.country.text = data.Country
-                    }catch (e :Exception){
+                    } catch (e: Exception) {
                         binding.state.text = null
                         binding.city.text = null
                         binding.country.text = null
                         binding.selectPinCode.text = null
                         Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show()
                     }
-                }else{
+                } else {
                     Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
                 }
             } else {
@@ -313,7 +321,7 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     fun fieldValidation(): Boolean {
-        return (binding.companyName.text.toString().isEmpty() ||
+        return !(binding.companyName.text.toString().isEmpty() ||
                 (binding.ownerName.text.toString().isEmpty()) ||
                 (binding.mobileNumber.text.toString().isEmpty()) ||
                 (binding.address.text.toString().isEmpty()) || (binding.city.text.toString()

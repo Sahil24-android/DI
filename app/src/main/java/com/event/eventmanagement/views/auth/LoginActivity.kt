@@ -18,7 +18,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var userViewModel: UserViewModel
     private lateinit var preferenceManager: PreferenceManager
-    private val loader by lazy { CustomProgressDialog(this)}
+    private val loader by lazy { CustomProgressDialog(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -38,34 +38,34 @@ class LoginActivity : AppCompatActivity() {
                     mobileNumber = binding.mobileNumber.text.toString()
                 )
                 userViewModel.login(loginBody)
-            }else{
-                Toast.makeText(this,"Please enter mobile number and password",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Please enter mobile number and password", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
 
-        userViewModel.isLoading.observe(this){
-            if(it){
+        userViewModel.isLoading.observe(this) {
+            if (it) {
                 loader.show()
-            }else{
+            } else {
                 loader.dismiss()
             }
         }
-        userViewModel.loginResponse.observe(this){response ->
-            if(response != null){
-                val intent = Intent(this,MainActivity::class.java)
+        userViewModel.loginResponse.observe(this) { response ->
+            if (response != null) {
                 preferenceManager.setLogin(true)
                 preferenceManager.setVendorId(response.data?.id!!)
                 preferenceManager.setUserData(response.data!!)
                 preferenceManager.setImageRes(response.data?.logoImage!!)
-                startActivity(intent)
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
         }
 
-        userViewModel.error.observe(this){
-            if(it != null){
-               Toast.makeText(this,it, Toast.LENGTH_SHORT).show()
+        userViewModel.error.observe(this) {
+            if (it != null) {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
         }
 

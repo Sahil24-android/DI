@@ -13,13 +13,16 @@ import com.event.eventmanagement.MainActivity
 import com.event.eventmanagement.views.auth.adapter.EventPackageMasterAdapter
 import com.event.eventmanagement.databinding.FragmentPackageMasterBinding
 import com.event.eventmanagement.model.UserViewModel
+import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.newpackageMaster.AddNewEventPackageMaster
 
 
 class PackageMasterFragment : Fragment() {
     private lateinit var binding: FragmentPackageMasterBinding
     private lateinit var userViewModel: UserViewModel
+    private lateinit var preferenceManager: PreferenceManager
     private lateinit var eventPackageMasterAdapter: EventPackageMasterAdapter
+    private var vendorId:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +38,8 @@ class PackageMasterFragment : Fragment() {
         binding = FragmentPackageMasterBinding.inflate(inflater, container, false)
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         eventPackageMasterAdapter = EventPackageMasterAdapter()
-    //    (activity as MainActivity).hideToolbar()
+        preferenceManager = PreferenceManager(requireContext())
+        (activity as MainActivity).hideToolbar()
         return binding.root
     }
 
@@ -49,7 +53,9 @@ class PackageMasterFragment : Fragment() {
         binding.back.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
-        userViewModel.getEventPackages()
+
+        vendorId = preferenceManager.getVendorId().toString()
+        userViewModel.getEventPackages(vendorId!!)
         userViewModel.getEventPackages.observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 if (result.data.isNotEmpty()) {
@@ -64,7 +70,7 @@ class PackageMasterFragment : Fragment() {
         }
 
         binding.swipeToRefresh.setOnRefreshListener {
-            userViewModel.getEventPackages()
+            userViewModel.getEventPackages(vendorId!!)
             binding.swipeToRefresh.isRefreshing = false
         }
         binding.addPackageMaster.setOnClickListener {
@@ -75,7 +81,7 @@ class PackageMasterFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        userViewModel.getEventPackages()
+        userViewModel.getEventPackages(vendorId!!)
     }
 
     companion object {

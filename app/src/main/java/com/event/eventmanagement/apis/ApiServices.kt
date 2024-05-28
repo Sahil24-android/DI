@@ -9,6 +9,8 @@ import com.event.eventmanagement.views.activity.exposed.data.ExposedBody
 import com.event.eventmanagement.views.activity.exposed.data.ExposedResponse
 import com.event.eventmanagement.views.activity.exposed.data.VendorListResponse
 import com.event.eventmanagement.views.activity.invoice.data.PdfBody
+import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseBody
+import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseResponse
 import com.event.eventmanagement.views.auth.datasource.LoginBody
 import com.event.eventmanagement.views.auth.datasource.LoginResponse
 import com.event.eventmanagement.views.auth.datasource.PackageData
@@ -42,7 +44,7 @@ interface ApiServices {
 
 
     @GET("service/{serviceId}")
-    suspend fun getPackages(
+    suspend fun getServices(
         @Path("serviceId") serviceId: String
     ): Response<PackageData>
 
@@ -91,15 +93,19 @@ interface ApiServices {
     @POST("event/addEvent")
     suspend fun createEvent(@Body eventRequest: EventBody): Response<EventResponse>
 
-    @GET("event")
-    suspend fun getEvents(): Response<AllEventsResponse>
+    @GET("event/{vendorId}")
+    suspend fun getEvents(
+        @Path("vendorId") vendor_id: String
+    ): Response<AllEventsResponse>
 
     @POST("event/eventPackage")
     suspend fun createPackage(@Body packageBody: PackageBody): Response<PackageResponse>
 
 
-    @GET("event/eventPackage")
-    suspend fun getEventPackage(): Response<AllPackageResponse>
+    @GET("event/eventPackage/{vendorId}")
+    suspend fun getEventPackage(
+        @Path("vendorId") vendor_id: String
+    ): Response<AllPackageResponse>
 
 
     @POST("event/eventadd")
@@ -157,5 +163,14 @@ interface ApiServices {
         @Path("vendorId") vendor_id: String
     ):Response<GetCustomerEventDataList>
 
+    @GET("event/getVendorList/{vendorId}")
+    suspend fun getEventByVendorId(
+        @Path("vendorId") vendor_id: String
+    ):Response<GetCustomerEventDataList>
 
+
+    @POST("expense/addExpense")
+    suspend fun addVendorExpense(
+        @Body vendorExpenseBody: VendorExpenseBody
+    ):Response<VendorExpenseResponse>
 }

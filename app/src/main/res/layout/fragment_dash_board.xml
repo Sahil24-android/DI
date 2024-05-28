@@ -9,8 +9,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:cardCornerRadius="@dimen/_20sdp">
+        android:layout_height="match_parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeToRefresh"
@@ -27,7 +26,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10sdp"
@@ -61,7 +60,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginEnd="@dimen/_10sdp"                        android:weightSum="2">
 
@@ -98,7 +97,7 @@
                         android:weightSum="2">
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/customers"
+                            android:id="@+id/gallery"
                             style="@style/ButtonStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -106,18 +105,19 @@
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="Customers" />
+                            android:text="Employees" />
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/payments"
+                            android:id="@+id/customers"
                             style="@style/ButtonStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:drawableLeft="@drawable/baseline_payment_24"
+                            android:drawableLeft="@drawable/baseline_groups_2_24"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="Payment" />
+                            android:text="Customers" />
+
+
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -128,16 +128,18 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:weightSum="2">
 
+
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/gallery"
+                            android:id="@+id/payments"
                             style="@style/ButtonStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/baseline_insert_photo_24"
+                            android:layout_gravity="end"
                             android:layout_marginEnd="@dimen/_5sdp"
+                            android:drawableLeft="@drawable/baseline_payment_24"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="Gallery" />
+                            android:text="Payment" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/transfer"
@@ -150,6 +152,7 @@
                             android:minHeight="@dimen/_50sdp"
                             android:text="Exposing" />
                     </LinearLayout>
+
 
                     <View
                         android:layout_width="match_parent"

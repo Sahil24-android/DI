@@ -58,6 +58,11 @@ class ExposeEventFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
+
+        binding.swipeToRefresh.setOnRefreshListener {
+            userViewModel.eventExposedByMe(preferenceManager.getVendorId().toString())
+            binding.swipeToRefresh.isRefreshing = false
+        }
     }
 
     companion object {

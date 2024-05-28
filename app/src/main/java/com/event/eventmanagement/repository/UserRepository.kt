@@ -11,6 +11,8 @@ import com.event.eventmanagement.views.activity.exposed.data.ExposedBody
 import com.event.eventmanagement.views.activity.exposed.data.ExposedResponse
 import com.event.eventmanagement.views.activity.exposed.data.VendorListResponse
 import com.event.eventmanagement.views.activity.invoice.data.PdfBody
+import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseBody
+import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseResponse
 import com.event.eventmanagement.views.auth.datasource.LoginBody
 import com.event.eventmanagement.views.auth.datasource.LoginResponse
 import com.event.eventmanagement.views.auth.datasource.PackageData
@@ -48,9 +50,9 @@ class UserRepository() {
         }
     }
 
-    suspend fun getPackages(serviceId: String): Result<PackageData> {
+    suspend fun getServicesVendor(serviceId: String): Result<PackageData> {
         return try {
-            val response = apiInterface.getPackages(serviceId)
+            val response = apiInterface.getServices(serviceId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -157,9 +159,9 @@ class UserRepository() {
         }
     }
 
-    suspend fun getEvents(): Result<AllEventsResponse> {
+    suspend fun getEvents(vendorId: String): Result<AllEventsResponse> {
         return try {
-            val response = apiInterface.getEvents()
+            val response = apiInterface.getEvents(vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -170,9 +172,9 @@ class UserRepository() {
         }
     }
 
-    suspend fun getPackages(): Result<AllPackageResponse> {
+    suspend fun getPackagesVendor(vendorId: String): Result<AllPackageResponse> {
         return try {
-            val response = apiInterface.getEventPackage()
+            val response = apiInterface.getEventPackage(vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -353,15 +355,38 @@ class UserRepository() {
                 Result.Error("Failed to get services: ${response.message()}")
             }
 
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Result.Error("Failed to get services: ${e.message}")
+        }
+
     }
 
-}
 
+    suspend fun getEventByVendorId(vendorId: String): Result<GetCustomerEventDataList> {
+        return try {
+            val response = apiInterface.getEventByVendorId(vendorId)
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
+                Result.Error("Failed to get services: ${response.message()}")
+            }
+        } catch (e: Exception) {
+            Result.Error("Exception occurred: ${e.message}")
+        }
+    }
 
+    suspend fun addVendorExpense(expenseBody: VendorExpenseBody):Result<VendorExpenseResponse>{
+        return try {
+            val response = apiInterface.addVendorExpense(expenseBody)
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
+                Result.Error("Failed to get services: ${response.message()}")
+            }
 
-
-
+        }catch (e:Exception){
+            Result.Error("Exception occurred: ${e.message}")
+        }
+    }
 
 }

@@ -7,44 +7,95 @@
     android:layout_height="match_parent"
     tools:context=".views.fragment.ExpensesFragment">
 
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.core.widget.NestedScrollView
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/header"
                 android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:background="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
                 android:layout_height="wrap_content">
 
-                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/toVendorTab"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_weight="1"
+                    android:background="@color/blueColorDark"
+                    android:gravity="center"
+                    android:text="To Vendor"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/toEmployeesTab"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="To Employees"
+                    android:textSize="@dimen/_12sdp" />
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/toVendorLayout"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/header"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_height="0dp">
 
 
-                    </LinearLayout>
-                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:text="Vendor Expenses"
+                    android:gravity="center"
+                    android:layout_height="match_parent"/>
 
-            </androidx.core.widget.NestedScrollView>
-        </LinearLayout>
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/addVendorExpense"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/baseline_add_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/toEmployeesLayout"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/header"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_height="0dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:text="Employees Expenses"
+                    android:gravity="center"
+                    android:layout_height="match_parent"/>
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/addExployeeExpense"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/baseline_add_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addExpenses"
-        android:layout_width="wrap_content"
-        android:layout_margin="@dimen/_20sdp"
-        app:rippleColor="@color/blueColorLight"
-        android:src="@drawable/baseline_add_24"
-        app:tint="@color/white"
-        style="@style/FloatingButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

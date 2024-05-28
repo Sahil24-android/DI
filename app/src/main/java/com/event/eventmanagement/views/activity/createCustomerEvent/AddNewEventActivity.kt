@@ -33,6 +33,7 @@ class AddNewEventActivity : AppCompatActivity() {
     private lateinit var customDateEventAdapter: CustomDateEventAdapter
     private lateinit var userViewModel: UserViewModel
     private lateinit var preferenceManager: PreferenceManager
+    private var vendorId:String? = null
     private val customDateEventList: ArrayList<EventDates> = ArrayList()
     private val packageList: ArrayList<EventPackageResponse> = ArrayList()
     private val dialog by lazy { CustomProgressDialog(this) }
@@ -43,8 +44,7 @@ class AddNewEventActivity : AppCompatActivity() {
 
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         preferenceManager = PreferenceManager(this)
-
-
+        vendorId = preferenceManager.getVendorId().toString()
         binding.customDatesRadio.isChecked = true
         binding.customDateLayout.visibility = View.VISIBLE
 
@@ -62,7 +62,7 @@ class AddNewEventActivity : AppCompatActivity() {
 
         }
 
-        userViewModel.getEventPackages()
+        userViewModel.getEventPackages(vendorId!!)
         userViewModel.getEventPackages.observe(this) { result ->
             packageList.clear()
             if (result != null) {

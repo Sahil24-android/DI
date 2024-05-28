@@ -21,12 +21,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/_10sdp">
+            <ImageButton
+                android:id="@+id/exposeEvent"
+                android:layout_width="@dimen/_40sdp"
+                app:tint="@color/blueColorDark"
+                android:background="@drawable/background_transparent"
+                android:src="@drawable/baseline_compare_arrows_24"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_height="@dimen/_40sdp"/>
 
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:textStyle="bold"
+                android:id="@+id/exposedEventText"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:textColor="@color/sabpaisa_red"
+                android:text="This event is already exposed to a registered vendor. Check the details in exposing from Dashborad"
+                android:layout_height="wrap_content"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+
                 android:weightSum="2">
 
                 <com.google.android.material.textview.MaterialTextView
@@ -94,6 +113,7 @@
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/custom_date_item" />
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:id="@+id/hideThisLayoutForExposed"
@@ -329,18 +349,17 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/exposeEvent"
-                android:layout_width="wrap_content"
-                android:text="Expose Event"
-                android:layout_gravity="end"
-                style="@style/ButtonStyle"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_height="wrap_content"/>
-
             </LinearLayout>
 
-
+            <ImageButton
+                android:id="@+id/showMore"
+                android:layout_width="wrap_content"
+                android:background="@color/white"
+                android:padding="@dimen/_5sdp"
+                android:layout_gravity="end"
+                android:layout_margin="@dimen/_5sdp"
+                android:src="@drawable/baseline_read_more_24"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

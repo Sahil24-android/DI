@@ -31,6 +31,7 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
     private lateinit var preferenceManager: PreferenceManager
     private var currentPosition = 0
     private var date: String? = null
+    private var exposedListData: ArrayList<EventData> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -46,24 +47,25 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
         adapter = CustomerEventAdapter(this, this)
         preferenceManager = PreferenceManager(this)
         binding.eventRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.eventRecyclerView.adapter = adapter
-        val snapHelper = PagerSnapHelper()
-        snapHelper.attachToRecyclerView(binding.eventRecyclerView)
+//        val snapHelper = PagerSnapHelper()
+//        snapHelper.attachToRecyclerView(binding.eventRecyclerView)
 
         exposedEventAdapter = CustomerExposedEventAdapter(this)
         preferenceManager = PreferenceManager(this)
         binding.exposedEventRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.exposedEventRecyclerView.adapter = exposedEventAdapter
 //        val snapHelper2 = PagerSnapHelper()
 //        snapHelper2.attachToRecyclerView(binding.eventRecyclerView)
 
 
+//
+//
+//
 
-//
-//
-//
+        val regex = Regex("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
         userViewModel.getAllCustomerEvents.observe(this) {
             if (it.data.isNotEmpty()) {
                 adapter.updateList(it.data)
@@ -85,10 +87,22 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 
 
 
-        userViewModel.eventExposedToMe.observe(this){
-            if (it.data.isNotEmpty()){
-                exposedEventAdapter.updateList(it.data)
-            }else{
+        userViewModel.eventExposedToMe.observe(this) {
+            exposedListData.clear()
+            if (it.data.isNotEmpty()) {
+                if (date!!.matches(regex)) {
+                    for (data in it.data) {
+                        for (item in data.eventDates) {
+                            if (item.fromDate.equals(date)) {
+                                exposedListData.add(data)
+                            }
+                        }
+                    }
+                    exposedEventAdapter.updateList(exposedListData)
+                } else {
+                    exposedEventAdapter.updateList(it.data)
+                }
+            } else {
                 Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show()
             }
         }
@@ -114,10 +128,13 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 
         date = intent.getStringExtra("date")
 //        viewModel.getEventByDate(date!!)
+
         userViewModel.getEventByDate.observe(this) {
             if (it.data.isNotEmpty()) {
                 adapter.updateList(it.data)
+                binding.eventLayout.visibility = View.VISIBLE
             } else {
+                binding.eventLayout.visibility = View.GONE
                 Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show()
             }
         }
@@ -139,7 +156,7 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 //        Log.d("date", "onCreate: $date")
     }
 
-    fun showBottomSheet(context: Context, name: String, event: EventData,isExposed:Boolean) {
+    fun showBottomSheet(context: Context, name: String, event: EventData, isExposed: Boolean) {
         val bottomSheetDialog = BottomSheetDialog(context)
         val view = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_layout, null)
 
@@ -147,14 +164,14 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
         val addPaymentTextView: MaterialTextView = view.findViewById(R.id.tvAddPayment)
         val editEventTextView: MaterialTextView = view.findViewById(R.id.tvEditEvent)
         val deleteEventTextView: MaterialTextView = view.findViewById(R.id.tvDeleteEvent)
-        val exposeEvent :MaterialTextView = view.findViewById(R.id.exposeEvent)
+        val exposeEvent: MaterialTextView = view.findViewById(R.id.exposeEvent)
 
-        if (isExposed){
+        if (isExposed) {
             addPaymentTextView.visibility = View.GONE
             editEventTextView.visibility = View.GONE
             deleteEventTextView.visibility = View.GONE
             exposeEvent.visibility = View.VISIBLE
-        }else{
+        } else {
             addPaymentTextView.visibility = View.VISIBLE
             editEventTextView.visibility = View.VISIBLE
             deleteEventTextView.visibility = View.VISIBLE
@@ -216,22 +233,21 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
                 .visibility = View.GONE
             userViewModel.getAllEvents(preferenceManager.getVendorId().toString())
         } else if (date.toString().contains("From Customer")) {
-            Log.d("date",date.toString())
+            Log.d("date", date.toString())
             val customerId = date.toString().split(" ")[2]
             userViewModel.getEventByCustomer(customerId)
-        }else{
-            userViewModel.getEventByDate(date!!,preferenceManager.getVendorId().toString())
+        } else {
+            userViewModel.getEventByDate(date!!, preferenceManager.getVendorId().toString())
             binding.fromPayments.visibility = View.GONE
         }
         super.onResume()
     }
 
     override fun actionItemClick(position: Int, item: EventData) {
-
-        showBottomSheet(this, item.customerdata[0].customerName!!, item,false)
+        showBottomSheet(this, item.customerdata[0].customerName!!, item, false)
     }
 
     override fun exposeEvent(position: Int, item: EventData) {
-        showBottomSheet(this, item.customerdata[0].customerName!!, item,true)
+        showBottomSheet(this, item.customerdata[0].customerName!!, item, true)
     }
 }

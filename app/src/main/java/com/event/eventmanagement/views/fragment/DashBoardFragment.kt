@@ -34,7 +34,7 @@ import java.util.Calendar
 import java.util.Locale
 
 
-class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponsesModel> {
+class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionResponsesModel> {
 
     private lateinit var binding: FragmentDashBoardBinding
     private lateinit var userViewModel: UserViewModel
@@ -67,15 +67,12 @@ class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponse
         binding.calendarView.setPreviousButtonImage(resources.getDrawable(R.drawable.baseline_arrow_back_ios_new_24))
 
 
-
-
-
-      //  userViewModel.getAllEventDates()
+        //  userViewModel.getAllEventDates()
         val events: MutableList<CalendarDay> = ArrayList()
         userViewModel.allEventsDates.observe(viewLifecycleOwner) { response ->
             if (response != null) {
                 if (response.data.isNotEmpty()) {
-                  //  val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    //  val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                     for (item in response.data) {
                         Log.d("item", item.toString())
                         val day = item.fromDate!!.split("-")
@@ -94,20 +91,19 @@ class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponse
                 }
             }
         }
-        userViewModel.isLoading.observe(viewLifecycleOwner){
-            if (it){
+
+        userViewModel.isLoading.observe(viewLifecycleOwner) {
+            if (it) {
                 loader.show()
-            }else{
+            } else {
                 loader.dismiss()
             }
         }
 
 
-        binding.eventMaster.setOnClickListener {
-            loadFragment(EventTypeMastersFragment())
-        }
 
-        binding.customers.setOnClickListener{
+
+        binding.customers.setOnClickListener {
             loadFragment(CustomerFragment())
         }
 
@@ -142,7 +138,7 @@ class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponse
 
         binding.payments.setOnClickListener {
             val intent = Intent(requireContext(), EventActivity::class.java)
-            intent.putExtra("date","payment")
+            intent.putExtra("date", "payment")
             startActivity(intent)
         }
 
@@ -207,8 +203,15 @@ class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponse
             startActivity(intent)
         }
 
+        binding.eventMaster.setOnClickListener {
+            loadFragment(EventTypeMastersFragment())
 
+        }
 
+        binding.packageMaster.setOnClickListener {
+            loadFragment(PackageMasterFragment())
+
+        }
 
     }
 

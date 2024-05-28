@@ -29,6 +29,7 @@ class EventTypeMastersFragment : Fragment() {
     private lateinit var userViewModel: UserViewModel
     private lateinit var eventAdapter: EventAdapter
     private lateinit var preferenceManager: PreferenceManager
+    private var vendorId:String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +44,7 @@ class EventTypeMastersFragment : Fragment() {
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         eventAdapter = EventAdapter(requireContext())
         preferenceManager = PreferenceManager(requireContext())
-       // (activity as MainActivity).hideToolbar()
+        (activity as MainActivity).hideToolbar()
         return binding.root
     }
 
@@ -58,10 +59,12 @@ class EventTypeMastersFragment : Fragment() {
         binding.back.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
+
         binding.eventRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.eventRecycler.adapter = eventAdapter
 
-        userViewModel.getEvents()
+        vendorId = preferenceManager.getVendorId().toString()
+        userViewModel.getEvents(vendorId!!)
 
         userViewModel.getAllEventsResponse.observe(viewLifecycleOwner) { result ->
             if (result != null) {
@@ -76,7 +79,7 @@ class EventTypeMastersFragment : Fragment() {
         }
 
         binding.swipeToRefresh.setOnRefreshListener {
-            userViewModel.getEvents()
+            userViewModel.getEvents(vendorId!!)
             binding.swipeToRefresh.isRefreshing = false
         }
     }
@@ -116,7 +119,7 @@ class EventTypeMastersFragment : Fragment() {
                     if (response.msg!!.contains("Event Added Successfully")) {
                         dialog.dismiss()
                         Handler(Looper.getMainLooper()).postDelayed({
-                            userViewModel.getEvents()
+                            userViewModel.getEvents(vendorId!!)
                             binding.swipeToRefresh.isRefreshing = false
                         }, 1500)
                     } else {
@@ -124,7 +127,7 @@ class EventTypeMastersFragment : Fragment() {
                             .show()
                         dialog.dismiss()
                         Handler(Looper.getMainLooper()).postDelayed({
-                            userViewModel.getEvents()
+                            userViewModel.getEvents(vendorId!!)
                             binding.swipeToRefresh.isRefreshing = false
                         }, 1500)
                     }

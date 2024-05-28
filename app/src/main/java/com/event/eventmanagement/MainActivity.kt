@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
 import com.event.eventmanagement.apis.RetrofitClient
@@ -35,75 +36,101 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         preferenceManager = PreferenceManager(this)
 
-        val toggle = ActionBarDrawerToggle(
-            this, binding.drawerLayout,binding.toolbar,R.string.open_drawer,R.string.close_drawer
-        )
-        binding.drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-        val header = binding.navView.getHeaderView(0)
-        val imageViewLogo = header.findViewById<ImageView>(R.id.companyLogo)
-        val profile = header.findViewById<MaterialButton>(R.id.profile)
-        Picasso.get().load("${RetrofitClient.BASE_URL.replace("api/","")}${preferenceManager.getImageUrl()}").into(imageViewLogo)
+//        val toggle = ActionBarDrawerToggle(
+//            this, binding.drawerLayout,binding.toolbar,R.string.open_drawer,R.string.close_drawer
+//        )
+//        binding.drawerLayout.addDrawerListener(toggle)
+//        toggle.syncState()
+//        val header = binding.navView.getHeaderView(0)
+//        val imageViewLogo = header.findViewById<ImageView>(R.id.companyLogo)
+//        val profile = header.findViewById<MaterialButton>(R.id.profile)
+//        Picasso.get().load("${RetrofitClient.BASE_URL.replace("api/","")}${preferenceManager.getImageUrl()}").into(imageViewLogo)
 
-
-        profile.setOnClickListener {
-            val intent = Intent(this,ProfileActivity::class.java)
-            startActivity(intent)
-        }
-        toggle.drawerArrowDrawable.color = resources.getColor(R.color.white)
+//        profile.setOnClickListener {
+//            val intent = Intent(this,ProfileActivity::class.java)
+//            startActivity(intent)
+//        }
+//        toggle.drawerArrowDrawable.color = resources.getColor(R.color.white)
         loadFragment(DashBoardFragment())
         binding.title.text = "DashBoard"
-        binding.navView.setNavigationItemSelectedListener { menuItem ->
-            // Handle navigation item clicks here
+//        binding.navView.setNavigationItemSelectedListener { menuItem ->
+//            // Handle navigation item clicks here
+//            when (menuItem.itemId) {
+//                R.id.dashBoard -> {
+//                    // Load Fragment1 when item 1 is clicked
+//                    loadFragment(DashBoardFragment())
+//                    binding.title.text = "DashBoard"
+//                    true
+//                }
+//
+//                R.id.expenses ->{
+//                    loadFragment(ExpensesFragment())
+//                    binding.title.text = "Expenses"
+//                    true
+//                }
+//
+//                R.id.eventMaster ->{
+//                    loadFragment(EventTypeMastersFragment())
+//                    binding.title.text = "Event Master"
+//                    true
+//                }
+//
+//                R.id.packageMaster  ->{
+//                    loadFragment(PackageMasterFragment())
+//                    binding.title.text = "Package Master"
+//                    true
+//                }
+//
+////                R.id.employee ->{
+////                    loadFragment(EmployeeFragment())
+////                    binding.title.text = "Employee"
+////                    true
+////                }
+//
+//
+//                R.id.logout ->{
+//                    preferenceManager.clearSession()
+//                    startActivity(Intent(this, LoginActivity::class.java))
+//                    finishAffinity()
+////                    startActivity(Intent(this, InvoiceActivity::class.java))
+//                    true
+//                }
+////                R.id.socket ->{
+////                    loadFragment(WebSocketGuide())
+////                    binding.title.text = "Socket"
+////                    true
+////                }
+//                // Add more cases for other items
+//                else -> false
+//
+//
+//            }
+//
+//        }
+
+        binding.bottomNavigation.selectedItemId = R.id.dashBoard
+
+
+        binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.dashBoard -> {
-                    // Load Fragment1 when item 1 is clicked
+                R.id.dashBoard ->{
                     loadFragment(DashBoardFragment())
                     binding.title.text = "DashBoard"
                     true
                 }
-
-                R.id.expenses ->{
-                    loadFragment(ExpensesFragment())
-                    binding.title.text = "Expenses"
+                R.id.profile ->{
+                    startActivity(Intent(this, ProfileActivity::class.java))
                     true
                 }
 
-                R.id.eventMaster ->{
-                    loadFragment(EventTypeMastersFragment())
-                    binding.title.text = "Event Master"
+                R.id.gallery ->{
+                    Toast.makeText(this,"Launching Soon",Toast.LENGTH_SHORT).show()
                     true
                 }
 
-                R.id.packageMaster  ->{
-                    loadFragment(PackageMasterFragment())
-                    binding.title.text = "Package Master"
-                    true
+                else -> {
+                    false
                 }
-
-//                R.id.employee ->{
-//                    loadFragment(EmployeeFragment())
-//                    binding.title.text = "Employee"
-//                    true
-//                }
-
-
-                R.id.logout ->{
-                    preferenceManager.clearSession()
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    finishAffinity()
-//                    startActivity(Intent(this, InvoiceActivity::class.java))
-                    true
-                }
-//                R.id.socket ->{
-//                    loadFragment(WebSocketGuide())
-//                    binding.title.text = "Socket"
-//                    true
-//                }
-                // Add more cases for other items
-                else -> false
-
-
             }
 
         }
@@ -115,9 +142,12 @@ class MainActivity : AppCompatActivity() {
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
+
             .commit()
-        binding.drawerLayout.closeDrawers()
+        //binding.drawerLayout.closeDrawers()
     }
+
+
 
     fun hideToolbar(){
         binding.appbar.visibility = View.GONE

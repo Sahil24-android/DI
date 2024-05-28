@@ -15,6 +15,7 @@ import com.event.eventmanagement.views.activity.exposed.data.ExposedBody
 import com.event.eventmanagement.views.activity.exposed.data.ExposedResponse
 import com.event.eventmanagement.views.activity.exposed.data.VendorListResponse
 import com.event.eventmanagement.views.activity.invoice.data.PdfBody
+import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseBody
 import com.event.eventmanagement.views.auth.datasource.LoginBody
 import com.event.eventmanagement.views.auth.datasource.LoginResponse
 import com.event.eventmanagement.views.auth.datasource.PackageData
@@ -74,7 +75,7 @@ class UserViewModel : ViewModel() {
     fun getServicePackage(serviceId: String) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = repository.getPackages(serviceId)
+            val result = repository.getServicesVendor(serviceId)
             if (result is Result.Success) {
                 _packages.value = result.value
                 _isLoading.value = false
@@ -161,10 +162,10 @@ class UserViewModel : ViewModel() {
 
     private val _getAllEvent: MutableLiveData<AllEventsResponse> = MutableLiveData()
     val getAllEventsResponse: LiveData<AllEventsResponse> get() = _getAllEvent
-    fun getEvents() {
+    fun getEvents(vendorId: String) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = repository.getEvents()
+            val result = repository.getEvents(vendorId)
             if (result is Result.Success) {
                 _getAllEvent.value = result.value
                 _isLoading.value = false
@@ -178,10 +179,10 @@ class UserViewModel : ViewModel() {
 
     private val _getEventPackages: MutableLiveData<AllPackageResponse> = MutableLiveData()
     val getEventPackages: LiveData<AllPackageResponse> get() = _getEventPackages
-    fun getEventPackages() {
+    fun getEventPackages(vendorId: String) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = repository.getPackages()
+            val result = repository.getPackagesVendor(vendorId)
             if (result is Result.Success) {
                 _getEventPackages.value = result.value
                 _isLoading.value = false
@@ -272,7 +273,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-
     private val _addPayment: MutableLiveData<PaymentResponse> = MutableLiveData()
     val addPayment: LiveData<PaymentResponse> get() = _addPayment
     fun addPayment(paymentBody: PaymentBody) {
@@ -316,6 +316,7 @@ class UserViewModel : ViewModel() {
                 _isLoading.value = false
             } else if (result is Result.Error) {
                 _error.value = result.message
+                _isLoading.value = false
             }
             _isLoading.value = false
         }
@@ -412,5 +413,39 @@ class UserViewModel : ViewModel() {
             }
             _isLoading.value = false
             }
+    }
+
+
+    private val _getVendorsEvent: MutableLiveData<GetCustomerEventDataList> = MutableLiveData()
+    val getVendorEvent: MutableLiveData<GetCustomerEventDataList> get() = _getVendorsEvent
+
+    fun getEventByVendorId(vendorId: String){
+        viewModelScope.launch {
+            _isLoading.value = false
+            val result = repository.getEventByVendorId(vendorId)
+            if (result is Result.Success) {
+                _getVendorsEvent.value = result.value
+                _isLoading.value = false
+            }else if (result is Result.Error) {
+                _error.value = result.message
+                _isLoading.value = false
+            }
+            _isLoading.value = false
+        }
+    }
+
+
+    fun addVendorExpense(vendorExpenseBody: VendorExpenseBody){
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.addVendorExpense(vendorExpenseBody)
+            if (result is Result.Success){
+                _isLoading.value = false
+            }else if (result is Result.Error){
+                _error.value = result.message
+                _isLoading.value = false
+            }
+            _isLoading.value = false
+        }
     }
 }

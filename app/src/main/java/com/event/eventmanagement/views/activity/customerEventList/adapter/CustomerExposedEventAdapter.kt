@@ -62,6 +62,12 @@ class CustomerExposedEventAdapter(private val context: Context) :
         holder.binding.contactDetails.text = current.exposedFrom!!.mobNo
         holder.binding.vendorAddress.text = current.exposedFrom!!.address
 
+        val adapter = ExposedEventPaymentsAdapter(context)
+        holder.binding.paymentRecycler.adapter = adapter
+        holder.binding.paymentRecycler.layoutManager = LinearLayoutManager(holder.itemView.context)
+        adapter.updateList(current.expensePayment)
+        holder.binding.paymentRecycler.setHasFixedSize(true)
+
     }
 
     override fun getItemCount(): Int {

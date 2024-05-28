@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class EventBody(
     @SerializedName("description" ) var description : String? = null,
     @SerializedName("event_name"  ) var eventName   : String? = null,
-    @SerializedName("vendor_id"   ) var vendorId    : String? = null
+    @SerializedName("vendor_id"   ) var vendorId    : String? = null,
 )
 
 data class EventResponse(

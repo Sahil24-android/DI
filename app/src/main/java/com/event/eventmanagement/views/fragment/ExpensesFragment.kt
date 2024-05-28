@@ -1,6 +1,7 @@
 package com.event.eventmanagement.views.fragment
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,21 +14,12 @@ import androidx.fragment.app.Fragment
 import com.event.eventmanagement.R
 import com.event.eventmanagement.apis.Result
 import com.event.eventmanagement.databinding.FragmentExpensesFrgmentBinding
+import com.event.eventmanagement.views.activity.vendorExpense.AddVendorExpense
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ExpensesFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ExpensesFragment : Fragment() {
     private lateinit var binding: FragmentExpensesFrgmentBinding
 
@@ -39,7 +31,7 @@ class ExpensesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentExpensesFrgmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -47,9 +39,22 @@ class ExpensesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+//        binding.addExpenses.setOnClickListener {
+//            showCustomDialog()
+//        }
 
-        binding.addExpenses.setOnClickListener {
-            showCustomDialog()
+        binding.toVendorTab.setOnClickListener {
+            binding.toVendorLayout.visibility = View.VISIBLE
+            binding.toEmployeesLayout.visibility = View.GONE
+        }
+
+        binding.toEmployeesTab.setOnClickListener {
+            binding.toVendorLayout.visibility = View.GONE
+            binding.toEmployeesLayout.visibility = View.VISIBLE
+        }
+
+        binding.addVendorExpense.setOnClickListener {
+            startActivity(Intent(requireContext(), AddVendorExpense::class.java))
         }
     }
 
