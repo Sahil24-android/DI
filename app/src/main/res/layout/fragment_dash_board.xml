@@ -26,25 +26,26 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:visibility="visible"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10sdp"
-                        android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
                         android:orientation="horizontal"
+                        android:visibility="visible"
                         android:weightSum="2">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/eventMaster"
                             style="@style/ButtonStyle"
                             android:layout_width="match_parent"
-                            android:drawableLeft="@drawable/baseline_event_24"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="Event\n Master" />
+                            android:text="Event\n Master"
+                            app:icon="@drawable/baseline_event_24"
+                            app:iconSize="@dimen/_20sdp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/packageMaster"
@@ -52,17 +53,20 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:drawableLeft="@drawable/baseline_wysiwyg_24"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="Package\nMaster" />
+                            android:text="Package\nMaster"
+                            app:icon="@drawable/baseline_wysiwyg_24"
+                            app:iconSize="@dimen/_20sdp" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginStart="@dimen/_10sdp"
-                        android:layout_marginEnd="@dimen/_10sdp"                        android:weightSum="2">
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/addEvent"
@@ -71,9 +75,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_weight="1"
-                            android:drawableLeft="@drawable/baseline_event_24"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="+ New\nEvent" />
+                            android:text="+ New\nEvent"
+                            app:icon="@drawable/baseline_event_24"
+                            app:iconSize="@dimen/_20sdp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/showAllEvents"
@@ -82,18 +87,19 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="1"
-                            android:drawableLeft="@drawable/baseline_event_24"
                             android:minHeight="@dimen/_40sdp"
-                            android:text="Show\nAll Events" />
+                            android:text="Show\nAll Events"
+                            app:icon="@drawable/baseline_event_24"
+                            app:iconSize="@dimen/_20sdp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
+                        android:orientation="horizontal"
                         android:weightSum="2">
 
                         <com.google.android.material.button.MaterialButton
@@ -101,31 +107,34 @@
                             style="@style/ButtonStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/baseline_groups_2_24"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="Employees" />
+                            android:text="Employees"
+                            app:icon="@drawable/baseline_groups_2_24"
+                            app:iconSize="@dimen/_20sdp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/customers"
                             style="@style/ButtonStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/baseline_groups_2_24"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="Customers" />
+                            android:text="Customers"
+                            app:icon="@drawable/baseline_groups_2_24"
+                            app:iconSize="@dimen/_20sdp" />
 
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
+                        android:orientation="horizontal"
                         android:weightSum="2">
 
 
@@ -136,10 +145,11 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_marginEnd="@dimen/_5sdp"
-                            android:drawableLeft="@drawable/baseline_payment_24"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="Payment" />
+                            android:text="Payment"
+                            app:icon="@drawable/baseline_payment_24"
+                            app:iconSize="@dimen/_20sdp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/transfer"
@@ -147,10 +157,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
-                            android:drawableLeft="@drawable/baseline_compare_arrows_24"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="Exposing" />
+                            android:text="Exposing"
+                            app:icon="@drawable/baseline_compare_arrows_24"
+                            app:iconSize="@dimen/_20sdp" />
                     </LinearLayout>
 
                     <ImageView
@@ -158,73 +169,76 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:padding="@dimen/_5sdp"
-                        android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:padding="@dimen/_5sdp"
                         android:src="@drawable/view_list" />
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:id="@+id/calendarContainer"
-                        android:visibility="gone"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:background="@color/black"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:layout_height="@dimen/_1sdp"/>
-                    <View
-                        android:layout_width="match_parent"
-                        android:background="@color/black"
-                        android:layout_marginTop="@dimen/_1sdp"
-                        android:layout_height="@dimen/_1sdp"/>
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        app:cardBackgroundColor="#FEF7FF"
-                        app:strokeColor="#FEF7FF"
                         android:layout_height="wrap_content"
-                        app:cardCornerRadius="@dimen/_10sdp">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                        <com.applandeo.materialcalendarview.CalendarView
-                            android:id="@+id/calendarView"
-                            app:pagesColor="#FEF7FF"
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_1sdp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:background="@color/black" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_1sdp"
+                            android:layout_marginTop="@dimen/_1sdp"
+                            android:background="@color/black" />
+
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:headerColor="#FEF7FF"
-                            app:abbreviationsBarColor="#FEF7FF"
-                            app:headerLabelColor="@color/black" />
-                    </com.google.android.material.card.MaterialCardView>
-                    <View
-                        android:layout_width="match_parent"
-                        android:background="@color/black"
-                        android:layout_marginTop="@dimen/_1sdp"
-                        android:layout_height="@dimen/_1sdp"/>
-                    <View
-                        android:layout_width="match_parent"
-                        android:background="@color/black"
-                        android:layout_marginTop="@dimen/_1sdp"
-                        android:layout_height="@dimen/_1sdp"/>
+                            app:cardBackgroundColor="#FEF7FF"
+                            app:cardCornerRadius="@dimen/_10sdp"
+                            app:strokeColor="#FEF7FF">
+
+                            <com.applandeo.materialcalendarview.CalendarView
+                                android:id="@+id/calendarView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:abbreviationsBarColor="#FEF7FF"
+                                app:headerColor="#FEF7FF"
+                                app:headerLabelColor="@color/black"
+                                app:pagesColor="#FEF7FF" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_1sdp"
+                            android:layout_marginTop="@dimen/_1sdp"
+                            android:background="@color/black" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_1sdp"
+                            android:layout_marginTop="@dimen/_1sdp"
+                            android:background="@color/black" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/eventListContainer"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:visibility="visible"
-                        android:layout_height="wrap_content">
+                        android:visibility="visible">
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/eventListRecyclerView"
                             android:layout_width="match_parent"
-                            tools:listitem="@layout/event_list_item"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            tools:listitem="@layout/event_list_item" />
 
                     </LinearLayout>
-
 
 
                 </LinearLayout>

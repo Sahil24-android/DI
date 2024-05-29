@@ -106,14 +106,14 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
         }
 
 
-        userViewModel.eventExposedToMe(preferenceManager.getVendorId().toString())
+//        userViewModel.eventExposedToMe(preferenceManager.getVendorId().toString())
 
         userViewModel.eventExposedToMe.observe(viewLifecycleOwner) {
             exposedListData.clear()
             if (it.data.isNotEmpty()) {
                 exposedListData.addAll(it.data)
             } else {
-               // Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
             }
             userViewModel.getAllEvents(preferenceManager.getVendorId().toString())
         }
@@ -125,7 +125,7 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
 
         userViewModel.getAllCustomerEvents.observe(viewLifecycleOwner) {
             if (it.data.isNotEmpty()) {
-               exposedListData.addAll(it.data)
+                exposedListData.addAll(it.data)
                 dashBoardEventAdapter.updateList(exposedListData)
             } else {
                 dashBoardEventAdapter.updateList(exposedListData)
@@ -257,7 +257,10 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
 
     override fun onResume() {
         super.onResume()
+
         userViewModel.getAllEventDates(preferenceManager.getVendorId().toString())
+        userViewModel.eventExposedToMe(preferenceManager.getVendorId().toString())
+
     }
 
     companion object {
@@ -270,6 +273,7 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
             .addToBackStack(null)
             .commit()
     }
+
 
     override fun onPaymentFail(message: TransactionResponsesModel?) {
         Log.d("SABPAISA", "Payment Fail")

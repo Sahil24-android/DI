@@ -25,6 +25,7 @@
                 android:id="@+id/exposeEvent"
                 android:layout_width="@dimen/_40sdp"
                 app:tint="@color/blueColorDark"
+                android:contentDescription="expose"
                 android:background="@drawable/background_transparent"
                 android:src="@drawable/baseline_compare_arrows_24"
                 android:layout_gravity="end"
@@ -357,6 +358,7 @@
                 android:background="@color/white"
                 android:padding="@dimen/_5sdp"
                 android:layout_gravity="end"
+                android:contentDescription="show more"
                 android:layout_margin="@dimen/_5sdp"
                 android:src="@drawable/baseline_read_more_24"
                 android:layout_height="wrap_content"/>
