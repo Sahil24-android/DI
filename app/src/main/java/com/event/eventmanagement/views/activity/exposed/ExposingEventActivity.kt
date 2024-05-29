@@ -99,7 +99,6 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
                 }
             }
 
-
         })
 
         binding.actualPrice.text = "\u20b9 ${eventData?.finalAmount}"

@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.CalendarDay
 import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener
 import com.event.eventmanagement.MainActivity
@@ -25,6 +26,8 @@ import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.createCustomerEvent.AddNewEventActivity
 import com.event.eventmanagement.views.activity.customerEventList.EventActivity
+import com.event.eventmanagement.views.activity.customerEventList.data.EventData
+import com.event.eventmanagement.views.fragment.adapter.DashBoardEventAdapter
 import com.google.android.material.datepicker.DayViewDecorator
 import com.sabpaisa.gateway.android.sdk.SabPaisaGateway
 import com.sabpaisa.gateway.android.sdk.interfaces.IPaymentSuccessCallBack
@@ -39,6 +42,8 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
     private lateinit var binding: FragmentDashBoardBinding
     private lateinit var userViewModel: UserViewModel
     private lateinit var preferenceManager: PreferenceManager
+    private lateinit var dashBoardEventAdapter: DashBoardEventAdapter
+    private var exposedListData: ArrayList<EventData> = ArrayList()
     private val loader by lazy { CustomProgressDialog(requireContext()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,6 +106,32 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
         }
 
 
+        userViewModel.eventExposedToMe(preferenceManager.getVendorId().toString())
+
+        userViewModel.eventExposedToMe.observe(viewLifecycleOwner) {
+            exposedListData.clear()
+            if (it.data.isNotEmpty()) {
+                exposedListData.addAll(it.data)
+            } else {
+               // Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
+            }
+            userViewModel.getAllEvents(preferenceManager.getVendorId().toString())
+        }
+
+        dashBoardEventAdapter = DashBoardEventAdapter(requireContext())
+        binding.eventListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.eventListRecyclerView.adapter = dashBoardEventAdapter
+
+
+        userViewModel.getAllCustomerEvents.observe(viewLifecycleOwner) {
+            if (it.data.isNotEmpty()) {
+               exposedListData.addAll(it.data)
+                dashBoardEventAdapter.updateList(exposedListData)
+            } else {
+                dashBoardEventAdapter.updateList(exposedListData)
+//                Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
+            }
+        }
 
 
         binding.customers.setOnClickListener {
@@ -142,6 +173,15 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
             startActivity(intent)
         }
 
+        binding.switchButton.setOnClickListener {
+            if (binding.calendarContainer.visibility == View.VISIBLE) {
+                binding.calendarContainer.visibility = View.GONE
+                binding.eventListContainer.visibility = View.VISIBLE
+            } else {
+                binding.calendarContainer.visibility = View.VISIBLE
+                binding.eventListContainer.visibility = View.GONE
+            }
+        }
 
         binding.swipeToRefresh.setOnRefreshListener {
             userViewModel.getAllEventDates(preferenceManager.getVendorId().toString())

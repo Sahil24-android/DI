@@ -26,8 +26,8 @@ import com.google.android.material.button.MaterialButton
 import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
-   private lateinit var binding:ActivityMainBinding
-   private lateinit var preferenceManager :PreferenceManager
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var preferenceManager: PreferenceManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -113,18 +113,19 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.dashBoard ->{
+                R.id.dashBoard -> {
                     loadFragment(DashBoardFragment())
                     binding.title.text = "DashBoard"
                     true
                 }
-                R.id.profile ->{
+
+                R.id.profile -> {
                     startActivity(Intent(this, ProfileActivity::class.java))
                     true
                 }
 
-                R.id.gallery ->{
-                    Toast.makeText(this,"Launching Soon",Toast.LENGTH_SHORT).show()
+                R.id.gallery -> {
+                    Toast.makeText(this, "Launching Soon", Toast.LENGTH_SHORT).show()
                     true
                 }
 
@@ -136,23 +137,21 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
     }
 
     private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment)
 
             .commit()
         //binding.drawerLayout.closeDrawers()
     }
 
 
-
-    fun hideToolbar(){
+    fun hideToolbar() {
         binding.appbar.visibility = View.GONE
     }
-    fun showToolbar(){
+
+    fun showToolbar() {
         binding.appbar.visibility = View.VISIBLE
     }
 }
