@@ -119,7 +119,6 @@
                             app:icon="@drawable/baseline_payment_24"
                             app:iconSize="@dimen/_20sdp" />
 
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/expense"
                             style="@style/ButtonStyle"

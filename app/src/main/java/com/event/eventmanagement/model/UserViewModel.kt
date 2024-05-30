@@ -30,6 +30,7 @@ import com.event.eventmanagement.views.fragment.datasource.AllPackageResponse
 import com.event.eventmanagement.views.fragment.datasource.CustomerResponse
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.event.eventmanagement.views.fragment.datasource.EventResponse
+import com.event.eventmanagement.views.fragment.datasource.GetVendorExpenseReponse
 import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.event.eventmanagement.views.fragment.datasource.PackageResponse
 import kotlinx.coroutines.launch
@@ -401,55 +402,74 @@ class UserViewModel : ViewModel() {
     private val _eventExposedToMe: MutableLiveData<GetCustomerEventDataList> = MutableLiveData()
     val eventExposedToMe: MutableLiveData<GetCustomerEventDataList> get() = _eventExposedToMe
 
-    fun eventExposedToMe(vendorId: String){
+    fun eventExposedToMe(vendorId: String) {
         viewModelScope.launch {
             _isLoading.value = false
             val result = repository.eventExposedToMe(vendorId)
             if (result is Result.Success) {
                 _eventExposedToMe.value = result.value
                 _isLoading.value = false
-            }else if (result is Result.Error) {
-                _error.value = result.message
-                _isLoading.value = false
-            }
-            _isLoading.value = false
-            }
-    }
-
-
-    private val _getVendorsEvent: MutableLiveData<GetCustomerEventDataList> = MutableLiveData()
-    val getVendorEvent: MutableLiveData<GetCustomerEventDataList> get() = _getVendorsEvent
-
-    fun getEventByVendorId(vendorId: String){
-        viewModelScope.launch {
-            _isLoading.value = false
-            val result = repository.getEventByVendorId(vendorId)
-            if (result is Result.Success) {
-                _getVendorsEvent.value = result.value
-                _isLoading.value = false
-            }else if (result is Result.Error) {
+            } else if (result is Result.Error) {
                 _error.value = result.message
                 _isLoading.value = false
             }
             _isLoading.value = false
         }
     }
+
+
+    private val _getVendorsEvent: MutableLiveData<GetCustomerEventDataList> = MutableLiveData()
+    val getVendorEvent: MutableLiveData<GetCustomerEventDataList> get() = _getVendorsEvent
+
+    fun getEventByVendorId(vendorId: String) {
+        viewModelScope.launch {
+            _isLoading.value = false
+            val result = repository.getEventByVendorId(vendorId)
+            if (result is Result.Success) {
+                _getVendorsEvent.value = result.value
+                _isLoading.value = false
+            } else if (result is Result.Error) {
+                _error.value = result.message
+                _isLoading.value = false
+            }
+            _isLoading.value = false
+        }
+    }
+
     private val _addVendorExpense: MutableLiveData<VendorExpenseResponse> = MutableLiveData()
     val addVendorExpense: MutableLiveData<VendorExpenseResponse> get() = _addVendorExpense
 
-    fun addVendorExpense(vendorExpenseBody: VendorExpenseBody){
+    fun addVendorExpense(vendorExpenseBody: VendorExpenseBody) {
         viewModelScope.launch {
             _isLoading.value = true
             val result = repository.addVendorExpense(vendorExpenseBody)
-            if (result is Result.Success){
+            if (result is Result.Success) {
                 _addVendorExpense.value = result.value
                 _isLoading.value = false
-            }else if (result is Result.Error){
+            } else if (result is Result.Error) {
 
                 _error.value = result.message
                 _isLoading.value = false
             }
             _isLoading.value = false
+        }
+    }
+
+
+    private val _getVendorExpense: MutableLiveData<GetVendorExpenseReponse> = MutableLiveData()
+    val getVendorExpense: MutableLiveData<GetVendorExpenseReponse> get() = _getVendorExpense
+
+    fun getVendorExpenses(vendorId: String, type: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.getVendorExpenses(vendorId, type)
+            if (result is Result.Success) {
+                _getVendorExpense.value = result.value
+                _isLoading.value = false
+            } else if (result is Result.Error) {
+                _error.value = result.message
+                _isLoading.value = false
+            }
         }
     }
 }

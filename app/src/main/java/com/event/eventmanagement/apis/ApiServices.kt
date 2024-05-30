@@ -23,6 +23,7 @@ import com.event.eventmanagement.views.fragment.datasource.AllPackageResponse
 import com.event.eventmanagement.views.fragment.datasource.CustomerResponse
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.event.eventmanagement.views.fragment.datasource.EventResponse
+import com.event.eventmanagement.views.fragment.datasource.GetVendorExpenseReponse
 import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.event.eventmanagement.views.fragment.datasource.PackageResponse
 import okhttp3.MultipartBody
@@ -86,7 +87,7 @@ interface ApiServices {
         @Part("state_id") state_id: RequestBody,
         @Part("is_active") is_active: RequestBody,
         @Part("city_id") city_id: RequestBody,
-        @Part("password") password:RequestBody
+        @Part("password") password: RequestBody
     ): Response<RegisterUserResponse>
 
 
@@ -131,46 +132,55 @@ interface ApiServices {
     @GET("event/getCustomerEvents/{customerId}")
     suspend fun getEventByCustomer(
         @Path("customerId") customerId: String
-    ):Response<GetCustomerEventDataList>
+    ): Response<GetCustomerEventDataList>
+
     @POST("event/Makepayment")
-    suspend fun addPayment(@Body paymentBody: PaymentBody):Response<PaymentResponse>
+    suspend fun addPayment(@Body paymentBody: PaymentBody): Response<PaymentResponse>
 
     @GET("customer")
     suspend fun getAllCustomer(): Response<CustomerResponse>
 
 
     @POST("vendor/login")
-    suspend fun login(@Body loginBody: LoginBody):Response<LoginResponse>
+    suspend fun login(@Body loginBody: LoginBody): Response<LoginResponse>
 
 
     @POST("event/updatePaymentUrl")
-    suspend fun updatePdfUrl(@Body pdfBody: PdfBody):Response<ResponseBody>
+    suspend fun updatePdfUrl(@Body pdfBody: PdfBody): Response<ResponseBody>
 
 
     @GET("vendor")
-    suspend fun getAllVendors():Response<VendorListResponse>
+    suspend fun getAllVendors(): Response<VendorListResponse>
 
     @POST("event/TransferEvent")
-    suspend fun transferEvent(@Body exposedBody: ExposedBody):Response<ExposedResponse>
+    suspend fun transferEvent(@Body exposedBody: ExposedBody): Response<ExposedResponse>
 
     @GET("event/Exposing/{vendorId}")
     suspend fun eventExposedByMe(
         @Path("vendorId") vendor_id: String
-    ):Response<GetCustomerEventDataList>
+    ): Response<GetCustomerEventDataList>
 
     @GET("event/ExposedTo/{vendorId}")
     suspend fun eventExposedToMe(
         @Path("vendorId") vendor_id: String
-    ):Response<GetCustomerEventDataList>
+    ): Response<GetCustomerEventDataList>
 
     @GET("event/getVendorList/{vendorId}")
     suspend fun getEventByVendorId(
         @Path("vendorId") vendor_id: String
-    ):Response<GetCustomerEventDataList>
+    ): Response<GetCustomerEventDataList>
 
 
     @POST("expense/addExpense")
     suspend fun addVendorExpense(
         @Body vendorExpenseBody: VendorExpenseBody
-    ):Response<VendorExpenseResponse>
+    ): Response<VendorExpenseResponse>
+
+
+    @GET("/event/Getexpense/{vendorId}/{type}")
+    suspend fun getVendorExpenses(
+        @Path("vendorId") vendor_id: String,
+        @Path("type") type: String
+
+    ):Response<GetVendorExpenseReponse>
 }

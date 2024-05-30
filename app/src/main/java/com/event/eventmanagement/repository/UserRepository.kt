@@ -26,6 +26,7 @@ import com.event.eventmanagement.views.fragment.datasource.AllPackageResponse
 import com.event.eventmanagement.views.fragment.datasource.CustomerResponse
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.event.eventmanagement.views.fragment.datasource.EventResponse
+import com.event.eventmanagement.views.fragment.datasource.GetVendorExpenseReponse
 import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.event.eventmanagement.views.fragment.datasource.PackageResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -389,4 +390,16 @@ class UserRepository() {
         }
     }
 
+    suspend fun getVendorExpenses(vendorId: String,type: String):Result<GetVendorExpenseReponse>{
+        return try {
+            val response = apiInterface.getVendorExpenses(vendorId,type)
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            }else{
+                Result.Error("Failed to get services: ${response.message()}")
+            }
+        }catch (e:Exception){
+            Result.Error("Exception occurred: ${e.message}")
+        }
+    }
 }

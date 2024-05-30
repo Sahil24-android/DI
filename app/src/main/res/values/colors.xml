@@ -13,4 +13,5 @@
     <color name="calendar_background">#F3087E9C</color>
     <color name="colorSelected">#FF0000</color> <!-- Red for selected -->
     <color name="colorUnselected">#00FF00</color> <!-- Green for unselected -->
+    <color name="reports">#178FEB</color>
 </resources>

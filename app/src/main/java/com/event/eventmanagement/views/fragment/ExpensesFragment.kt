@@ -11,9 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.event.eventmanagement.MainActivity
 import com.event.eventmanagement.R
 import com.event.eventmanagement.apis.Result
 import com.event.eventmanagement.databinding.FragmentExpensesFrgmentBinding
+import com.event.eventmanagement.model.UserViewModel
+import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.vendorExpense.AddVendorExpense
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.google.android.material.button.MaterialButton
@@ -22,6 +26,8 @@ import com.google.android.material.textview.MaterialTextView
 
 class ExpensesFragment : Fragment() {
     private lateinit var binding: FragmentExpensesFrgmentBinding
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var preferenceManager: PreferenceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +39,9 @@ class ExpensesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentExpensesFrgmentBinding.inflate(inflater, container, false)
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        preferenceManager = PreferenceManager(requireContext())
+        (activity as MainActivity).hideToolbar()
         return binding.root
     }
 
@@ -43,6 +52,7 @@ class ExpensesFragment : Fragment() {
 //            showCustomDialog()
 //        }
 
+        userViewModel.getVendorExpenses(preferenceManager.getVendorId().toString(), "vendor")
         binding.toVendorTab.setOnClickListener {
             binding.toVendorLayout.visibility = View.VISIBLE
             binding.toEmployeesLayout.visibility = View.GONE
@@ -50,6 +60,7 @@ class ExpensesFragment : Fragment() {
             binding.toVendorTab.setTextColor(getResources().getColor(R.color.white))
             binding.toEmployeesTab.setBackgroundColor(resources.getColor(R.color.white))
             binding.toEmployeesTab.setTextColor(getResources().getColor(R.color.black))
+            userViewModel.getVendorExpenses(preferenceManager.getVendorId().toString(), "vendor")
         }
 
         binding.toEmployeesTab.setOnClickListener {
@@ -59,10 +70,19 @@ class ExpensesFragment : Fragment() {
             binding.toVendorTab.setTextColor(getResources().getColor(R.color.black))
             binding.toEmployeesTab.setBackgroundColor(resources.getColor(R.color.blueColorDark))
             binding.toEmployeesTab.setTextColor(getResources().getColor(R.color.white))
+
         }
 
         binding.addVendorExpense.setOnClickListener {
             startActivity(Intent(requireContext(), AddVendorExpense::class.java))
+        }
+
+        userViewModel.getVendorExpense.observe(viewLifecycleOwner){result ->
+            if (result.data.isNotEmpty()){
+
+            }else{
+                Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

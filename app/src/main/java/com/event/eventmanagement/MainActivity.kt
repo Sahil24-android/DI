@@ -16,6 +16,7 @@ import com.event.eventmanagement.views.activity.customerEventList.EventActivity
 import com.event.eventmanagement.views.activity.invoice.InvoiceActivity
 import com.event.eventmanagement.views.activity.profile.ProfileActivity
 import com.event.eventmanagement.views.auth.LoginActivity
+import com.event.eventmanagement.views.fragment.AccountReportsFragment
 import com.event.eventmanagement.views.fragment.CustomerFragment
 import com.event.eventmanagement.views.fragment.DashBoardFragment
 import com.event.eventmanagement.views.fragment.EmployeeFragment
@@ -126,6 +127,12 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.gallery -> {
                     Toast.makeText(this, "Launching Soon", Toast.LENGTH_SHORT).show()
+                    true
+                }
+
+                R.id.reports -> {
+                    loadFragment(AccountReportsFragment())
+                    binding.title.text = "Reports"
                     true
                 }
 

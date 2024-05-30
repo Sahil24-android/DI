@@ -16,6 +16,7 @@ import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.ActivityAddPaymentBinding
 import com.event.eventmanagement.extras.AppUtils
 import com.event.eventmanagement.model.UserViewModel
+import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.customerEventList.adapter.PaymentsAdapter
 import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.activity.invoice.InvoiceActivity
@@ -26,6 +27,7 @@ import java.util.Locale
 class AddPaymentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddPaymentBinding
     private lateinit var userViewModel: UserViewModel
+    private lateinit var preferenceManager: PreferenceManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -42,6 +44,7 @@ class AddPaymentActivity : AppCompatActivity() {
 
         val eventData = intent.getParcelableExtra<EventData>("event")
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        preferenceManager = PreferenceManager(this)
 
 
         val adapter = PaymentsAdapter(this)
@@ -57,6 +60,7 @@ class AddPaymentActivity : AppCompatActivity() {
             val paymentDate = binding.paymentDate.text.toString()
             remainingAmount = eventData.remainingAmount?.minus(amount!!)
             val paymentBody = PaymentBody(
+                preferenceManager.getVendorId().toString(),
                 eventId,
                 amount,
                 remainingAmount,
