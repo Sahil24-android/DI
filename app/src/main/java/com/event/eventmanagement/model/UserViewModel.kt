@@ -16,6 +16,7 @@ import com.event.eventmanagement.views.activity.exposed.data.ExposedResponse
 import com.event.eventmanagement.views.activity.exposed.data.VendorListResponse
 import com.event.eventmanagement.views.activity.invoice.data.PdfBody
 import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseBody
+import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseResponse
 import com.event.eventmanagement.views.auth.datasource.LoginBody
 import com.event.eventmanagement.views.auth.datasource.LoginResponse
 import com.event.eventmanagement.views.auth.datasource.PackageData
@@ -433,15 +434,18 @@ class UserViewModel : ViewModel() {
             _isLoading.value = false
         }
     }
-
+    private val _addVendorExpense: MutableLiveData<VendorExpenseResponse> = MutableLiveData()
+    val addVendorExpense: MutableLiveData<VendorExpenseResponse> get() = _addVendorExpense
 
     fun addVendorExpense(vendorExpenseBody: VendorExpenseBody){
         viewModelScope.launch {
             _isLoading.value = true
             val result = repository.addVendorExpense(vendorExpenseBody)
             if (result is Result.Success){
+                _addVendorExpense.value = result.value
                 _isLoading.value = false
             }else if (result is Result.Error){
+
                 _error.value = result.message
                 _isLoading.value = false
             }

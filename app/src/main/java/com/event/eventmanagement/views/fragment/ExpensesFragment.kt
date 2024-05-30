@@ -46,11 +46,19 @@ class ExpensesFragment : Fragment() {
         binding.toVendorTab.setOnClickListener {
             binding.toVendorLayout.visibility = View.VISIBLE
             binding.toEmployeesLayout.visibility = View.GONE
+            binding.toVendorTab.setBackgroundColor(resources.getColor(R.color.blueColorDark))
+            binding.toVendorTab.setTextColor(getResources().getColor(R.color.white))
+            binding.toEmployeesTab.setBackgroundColor(resources.getColor(R.color.white))
+            binding.toEmployeesTab.setTextColor(getResources().getColor(R.color.black))
         }
 
         binding.toEmployeesTab.setOnClickListener {
             binding.toVendorLayout.visibility = View.GONE
             binding.toEmployeesLayout.visibility = View.VISIBLE
+            binding.toVendorTab.setBackgroundColor(resources.getColor(R.color.white))
+            binding.toVendorTab.setTextColor(getResources().getColor(R.color.black))
+            binding.toEmployeesTab.setBackgroundColor(resources.getColor(R.color.blueColorDark))
+            binding.toEmployeesTab.setTextColor(getResources().getColor(R.color.white))
         }
 
         binding.addVendorExpense.setOnClickListener {

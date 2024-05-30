@@ -3,6 +3,7 @@ package com.event.eventmanagement.views.activity.vendorExpense
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -16,6 +17,7 @@ import com.event.eventmanagement.databinding.ActivityAddVendorExpenseBinding
 import com.event.eventmanagement.databinding.ActivityExposingEventBinding
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
+import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseBody
 import com.event.eventmanagement.views.auth.datasource.Vendor
 
@@ -106,10 +108,11 @@ class AddVendorExpense : AppCompatActivity() {
 
         val hasMap: HashMap<String, Int> = HashMap()
         val list = ArrayList<String>()
-
+        val eventData = ArrayList<EventData>()
         userViewModel.getVendorEvent.observe(this) { result ->
             if (result != null) {
                 list.clear()
+                eventData.addAll(result.data)
                 for (item in result.data) {
                     val builder = StringBuilder()
                     builder.append("Customer Name: ${item.customerdata[0].customerName}")
@@ -126,9 +129,9 @@ class AddVendorExpense : AppCompatActivity() {
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
             }
         }
-        binding.selectEvent.setOnItemClickListener { parent, view, position, id ->
-            hasMap[parent.getItemAtPosition(position).toString()] = id.toInt()
-        }
+//        binding.selectEvent.setOnItemClickListener { parent, view, position, id ->
+//            hasMap[parent.getItemAtPosition(position).toString()] = id.toInt()
+//        }
 
         var eventId:Int?=null
         var remainingAmount:Int?=null
@@ -137,27 +140,74 @@ class AddVendorExpense : AppCompatActivity() {
             val selectedItem = parent.getItemAtPosition(position).toString()
             eventId = hasMap[selectedItem]
             val amount = extractAmount(selectedItem)
-            remainingAmount = amount?.toInt()
+          //  remainingAmount = amount?.toInt()
+
+            val data = eventData.filter { it.id == eventId }
+            if (data.isNotEmpty()){
+                remainingAmount = data[0].expensePayment[data[0].expensePayment.size-1].remainingAmount
+                binding.remainingAmountText.text = "Remaining Amount: \u20B9 ${remainingAmount}"
+            }else{
+                remainingAmount = amount?.toInt()
+                binding.remainingAmountText.text = "Remaining Amount: \u20B9 ${remainingAmount}"
+
+            }
+            Log.d("data", data[0].expensePayment.toString())
 
         }
 
+        binding.expenseAmount.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString().isNotEmpty()){
+                    binding.remainingAmount.text = "Remaining Amount: \u20B9 ${remainingAmount?.minus(s.toString().toInt())}"
+                }else{
+                    binding.remainingAmount.text = "Remaining Amount: \u20B9 ${remainingAmount}"
+                }
+            }
+
+        })
+
+        userViewModel.addVendorExpense.observe(this) {
+            if (it.expense != null) {
+                Toast.makeText(this, "Expense Added", Toast.LENGTH_SHORT).show()
+                finish()
+            } else {
+                Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         binding.saveExpense.setOnClickListener {
             if (eventId!=null && sendToVendor!=0){
+
                 val amount = binding.expenseAmount.text.toString()
                 val description = binding.expenseDescription.text.toString()
                 if (amount.isNotEmpty()){
-                    val vendorExpenseBody = VendorExpenseBody(
-                        vendorId = preferenceManager.getVendorId(),
-                        expenseName = description,
-                        description = description,
-                        expenseToVendor = sendToVendor.toString(),
-                        eventManageId = eventId,
-                        amount = amount.toInt(),
-                        remainingAmount = remainingAmount!!.minus(amount.toInt())
-                    )
-                    userViewModel.addVendorExpense(vendorExpenseBody)
-                    finish()
+                    if (remainingAmount!! <= amount.toInt()) {
+                        val vendorExpenseBody = VendorExpenseBody(
+                            vendorId = preferenceManager.getVendorId(),
+                            expenseName = description,
+                            description = description,
+                            expenseToVendor = sendToVendor.toString(),
+                            eventManageId = eventId,
+                            amount = amount.toInt(),
+//                        remainingAmount = 500
+                            remainingAmount = remainingAmount!!.minus(
+                                amount.toInt()
+                            )
+                        )
+
+                        userViewModel.addVendorExpense(vendorExpenseBody)
+                    }else{
+                        Toast.makeText(this, "Amount Exceeded", Toast.LENGTH_SHORT).show()
+                    }
+
 
                 }else{
                     Toast.makeText(this, "Please Enter Amount", Toast.LENGTH_SHORT).show()

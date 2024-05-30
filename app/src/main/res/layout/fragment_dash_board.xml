@@ -25,45 +25,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_10sdp"
-                        android:layout_marginEnd="@dimen/_10sdp"
-                        android:orientation="horizontal"
-                        android:visibility="visible"
-                        android:weightSum="2">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/eventMaster"
-                            style="@style/ButtonStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/_5sdp"
-                            android:layout_weight="1"
-                            android:minHeight="@dimen/_50sdp"
-                            android:text="Event\n Master"
-                            app:icon="@drawable/baseline_event_24"
-                            app:iconSize="@dimen/_20sdp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/packageMaster"
-                            style="@style/ButtonStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:minHeight="@dimen/_50sdp"
-                            android:text="Package\nMaster"
-                            app:icon="@drawable/baseline_wysiwyg_24"
-                            app:iconSize="@dimen/_20sdp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_10sdp"
-                        android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:orientation="horizontal"
                         android:weightSum="2">
@@ -103,15 +70,16 @@
                         android:weightSum="2">
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/gallery"
+                            android:id="@+id/transfer"
                             style="@style/ButtonStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/_5sdp"
+                            android:layout_gravity="end"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="Employees"
-                            app:icon="@drawable/baseline_groups_2_24"
+                            android:layout_marginEnd="@dimen/_5sdp"
+                            android:text="Exposing"
+                            app:icon="@drawable/baseline_compare_arrows_24"
                             app:iconSize="@dimen/_20sdp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -151,15 +119,88 @@
                             app:icon="@drawable/baseline_payment_24"
                             app:iconSize="@dimen/_20sdp" />
 
+
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/transfer"
+                            android:id="@+id/expense"
+                            style="@style/ButtonStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginEnd="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:minHeight="@dimen/_50sdp"
+                            android:text="Expenses"
+                            app:icon="@drawable/baseline_payment_24"
+                            app:iconSize="@dimen/_20sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        android:weightSum="2">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/eventMaster"
+                            style="@style/ButtonStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:minHeight="@dimen/_50sdp"
+                            android:text="Event\n Master"
+                            app:icon="@drawable/baseline_event_24"
+                            app:iconSize="@dimen/_20sdp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/packageMaster"
+                            style="@style/ButtonStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:minHeight="@dimen/_50sdp"
+                            android:text="Package\nMaster"
+                            app:icon="@drawable/baseline_wysiwyg_24"
+                            app:iconSize="@dimen/_20sdp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:visibility="gone"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/gallery"
+                            style="@style/ButtonStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:minHeight="@dimen/_50sdp"
+                            android:text="Employees"
+                            app:icon="@drawable/baseline_groups_2_24"
+                            app:iconSize="@dimen/_20sdp" />
+
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/others"
                             style="@style/ButtonStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_50sdp"
-                            android:text="Exposing"
+                            android:text="Others"
                             app:icon="@drawable/baseline_compare_arrows_24"
                             app:iconSize="@dimen/_20sdp" />
                     </LinearLayout>

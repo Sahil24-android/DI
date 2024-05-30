@@ -196,6 +196,12 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/remainingAmountText"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_marginTop="@dimen/_10sdp"
             android:text="Enter Amount"

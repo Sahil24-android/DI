@@ -248,6 +248,10 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
 
         }
 
+        binding.expense.setOnClickListener {
+            loadFragment(ExpensesFragment())
+        }
+
         binding.packageMaster.setOnClickListener {
             loadFragment(PackageMasterFragment())
 
@@ -257,7 +261,6 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
 
     override fun onResume() {
         super.onResume()
-
         userViewModel.getAllEventDates(preferenceManager.getVendorId().toString())
         userViewModel.eventExposedToMe(preferenceManager.getVendorId().toString())
 
