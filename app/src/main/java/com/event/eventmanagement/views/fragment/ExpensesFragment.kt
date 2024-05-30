@@ -12,23 +12,28 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.event.eventmanagement.MainActivity
 import com.event.eventmanagement.R
 import com.event.eventmanagement.apis.Result
 import com.event.eventmanagement.databinding.FragmentExpensesFrgmentBinding
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
+import com.event.eventmanagement.views.activity.customerEventList.data.ExpensePayment
 import com.event.eventmanagement.views.activity.vendorExpense.AddVendorExpense
+import com.event.eventmanagement.views.fragment.adapter.VendorExpensesAdapter
 import com.event.eventmanagement.views.fragment.datasource.EventBody
+import com.event.eventmanagement.views.fragment.datasource.ExpenseData
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
+import java.util.ArrayList
 
 class ExpensesFragment : Fragment() {
     private lateinit var binding: FragmentExpensesFrgmentBinding
     private lateinit var userViewModel: UserViewModel
     private lateinit var preferenceManager: PreferenceManager
-
+    private lateinit var vendorExpensesAdapter: VendorExpensesAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,6 +46,7 @@ class ExpensesFragment : Fragment() {
         binding = FragmentExpensesFrgmentBinding.inflate(inflater, container, false)
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         preferenceManager = PreferenceManager(requireContext())
+
         (activity as MainActivity).hideToolbar()
         return binding.root
     }
@@ -52,7 +58,6 @@ class ExpensesFragment : Fragment() {
 //            showCustomDialog()
 //        }
 
-        userViewModel.getVendorExpenses(preferenceManager.getVendorId().toString(), "vendor")
         binding.toVendorTab.setOnClickListener {
             binding.toVendorLayout.visibility = View.VISIBLE
             binding.toEmployeesLayout.visibility = View.GONE
@@ -76,16 +81,30 @@ class ExpensesFragment : Fragment() {
         binding.addVendorExpense.setOnClickListener {
             startActivity(Intent(requireContext(), AddVendorExpense::class.java))
         }
+        val vendorExpenses  = ArrayList<ExpensePayment>()
+        vendorExpensesAdapter = VendorExpensesAdapter()
+        binding.vendorExpenseRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.vendorExpenseRecyclerView.adapter = vendorExpensesAdapter
+
 
         userViewModel.getVendorExpense.observe(viewLifecycleOwner){result ->
+            vendorExpenses.clear()
             if (result.data.isNotEmpty()){
-
+                for(item in result.data){
+                    vendorExpenses.addAll(item.expensePayment)
+                }
+                vendorExpensesAdapter.updateList(vendorExpenses)
             }else{
                 Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    override fun onResume() {
+        userViewModel.getVendorExpenses(preferenceManager.getVendorId().toString(), "vendor")
+
+        super.onResume()
+    }
     private fun showCustomDialog(
     ) {
         val dialogView =

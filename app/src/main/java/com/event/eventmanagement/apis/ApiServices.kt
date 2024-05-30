@@ -23,6 +23,7 @@ import com.event.eventmanagement.views.fragment.datasource.AllPackageResponse
 import com.event.eventmanagement.views.fragment.datasource.CustomerResponse
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.event.eventmanagement.views.fragment.datasource.EventResponse
+import com.event.eventmanagement.views.fragment.datasource.GetReportResponse
 import com.event.eventmanagement.views.fragment.datasource.GetVendorExpenseReponse
 import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.event.eventmanagement.views.fragment.datasource.PackageResponse
@@ -177,10 +178,14 @@ interface ApiServices {
     ): Response<VendorExpenseResponse>
 
 
-    @GET("/event/Getexpense/{vendorId}/{type}")
+    @GET("event/Getexpense/{vendorId}/{type}")
     suspend fun getVendorExpenses(
         @Path("vendorId") vendor_id: String,
         @Path("type") type: String
+    ): Response<GetVendorExpenseReponse>
 
-    ):Response<GetVendorExpenseReponse>
+    @GET("event/getAllTotal/{vendorId}")
+    suspend fun getReports(
+        @Path("vendorId") vendor_id: String
+    ):Response<GetReportResponse>
 }

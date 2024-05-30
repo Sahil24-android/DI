@@ -30,6 +30,7 @@ import com.event.eventmanagement.views.fragment.datasource.AllPackageResponse
 import com.event.eventmanagement.views.fragment.datasource.CustomerResponse
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.event.eventmanagement.views.fragment.datasource.EventResponse
+import com.event.eventmanagement.views.fragment.datasource.GetReportResponse
 import com.event.eventmanagement.views.fragment.datasource.GetVendorExpenseReponse
 import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.event.eventmanagement.views.fragment.datasource.PackageResponse
@@ -470,6 +471,25 @@ class UserViewModel : ViewModel() {
                 _error.value = result.message
                 _isLoading.value = false
             }
+        }
+    }
+
+
+    private val _getReports: MutableLiveData<GetReportResponse> = MutableLiveData()
+    val getReports: MutableLiveData<GetReportResponse> get() = _getReports
+
+
+    fun getReports(vendorId: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.getReports(vendorId)
+            if (result is Result.Success) {
+                _getReports.value = result.value
+                _isLoading.value = false
+            } else if (result is Result.Error) {
+                _error.value = result.message
+            }
+            _isLoading.value = false
         }
     }
 }

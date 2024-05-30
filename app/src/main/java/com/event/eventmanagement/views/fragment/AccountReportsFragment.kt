@@ -37,6 +37,12 @@ class AccountReportsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        userViewModel.getReports(preferenceManager.getVendorId().toString())
+
+        userViewModel.getReports.observe(viewLifecycleOwner){
+            binding.income.text = "₹ ${it.data!!.sumPay.toString()}"
+            binding.expense.text = "₹ ${it.data!!.sumExpense.toString()}"
+        }
 
     }
 

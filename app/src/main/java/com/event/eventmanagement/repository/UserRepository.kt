@@ -26,6 +26,7 @@ import com.event.eventmanagement.views.fragment.datasource.AllPackageResponse
 import com.event.eventmanagement.views.fragment.datasource.CustomerResponse
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.event.eventmanagement.views.fragment.datasource.EventResponse
+import com.event.eventmanagement.views.fragment.datasource.GetReportResponse
 import com.event.eventmanagement.views.fragment.datasource.GetVendorExpenseReponse
 import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.event.eventmanagement.views.fragment.datasource.PackageResponse
@@ -376,7 +377,7 @@ class UserRepository() {
         }
     }
 
-    suspend fun addVendorExpense(expenseBody: VendorExpenseBody):Result<VendorExpenseResponse>{
+    suspend fun addVendorExpense(expenseBody: VendorExpenseBody): Result<VendorExpenseResponse> {
         return try {
             val response = apiInterface.addVendorExpense(expenseBody)
             if (response.isSuccessful) {
@@ -385,20 +386,33 @@ class UserRepository() {
                 Result.Error("Failed to get services: ${response.message()}")
             }
 
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Result.Error("Exception occurred: ${e.message}")
         }
     }
 
-    suspend fun getVendorExpenses(vendorId: String,type: String):Result<GetVendorExpenseReponse>{
+    suspend fun getVendorExpenses(vendorId: String, type: String): Result<GetVendorExpenseReponse> {
         return try {
-            val response = apiInterface.getVendorExpenses(vendorId,type)
+            val response = apiInterface.getVendorExpenses(vendorId, type)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
-            }else{
+            } else {
                 Result.Error("Failed to get services: ${response.message()}")
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
+            Result.Error("Exception occurred: ${e.message}")
+        }
+    }
+
+    suspend fun getReports(vendorId: String): Result<GetReportResponse> {
+        return try {
+            val response = apiInterface.getReports(vendorId)
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
+                Result.Error("Failed to get services: ${response.message()}")
+            }
+        } catch (e: Exception) {
             Result.Error("Exception occurred: ${e.message}")
         }
     }
