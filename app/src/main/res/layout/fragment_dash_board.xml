@@ -172,13 +172,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_5sdp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:orientation="horizontal"
                         android:weightSum="2">
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/gallery"
+                            android:id="@+id/employee"
                             style="@style/ButtonStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

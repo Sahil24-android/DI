@@ -9,6 +9,7 @@ import com.event.eventmanagement.views.activity.exposed.data.ExposedBody
 import com.event.eventmanagement.views.activity.exposed.data.ExposedResponse
 import com.event.eventmanagement.views.activity.exposed.data.VendorListResponse
 import com.event.eventmanagement.views.activity.invoice.data.PdfBody
+import com.event.eventmanagement.views.activity.report.data.FromToDateBody
 import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseBody
 import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseResponse
 import com.event.eventmanagement.views.auth.datasource.LoginBody
@@ -24,7 +25,7 @@ import com.event.eventmanagement.views.fragment.datasource.CustomerResponse
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.event.eventmanagement.views.fragment.datasource.EventResponse
 import com.event.eventmanagement.views.fragment.datasource.GetReportResponse
-import com.event.eventmanagement.views.fragment.datasource.GetVendorExpenseReponse
+import com.event.eventmanagement.views.fragment.datasource.GetVendorExpenseResponse
 import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.event.eventmanagement.views.fragment.datasource.PackageResponse
 import okhttp3.MultipartBody
@@ -182,10 +183,16 @@ interface ApiServices {
     suspend fun getVendorExpenses(
         @Path("vendorId") vendor_id: String,
         @Path("type") type: String
-    ): Response<GetVendorExpenseReponse>
+    ): Response<GetVendorExpenseResponse>
 
     @GET("event/getAllTotal/{vendorId}")
     suspend fun getReports(
         @Path("vendorId") vendor_id: String
+    ):Response<GetReportResponse>
+
+    @POST("event/getAllTotal/{vendorId}")
+    suspend fun getReportsByDate(
+       @Body fromToDateBody:FromToDateBody,
+       @Path("vendorId") vendor_id: String
     ):Response<GetReportResponse>
 }

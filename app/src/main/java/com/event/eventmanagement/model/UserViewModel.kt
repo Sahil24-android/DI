@@ -15,6 +15,7 @@ import com.event.eventmanagement.views.activity.exposed.data.ExposedBody
 import com.event.eventmanagement.views.activity.exposed.data.ExposedResponse
 import com.event.eventmanagement.views.activity.exposed.data.VendorListResponse
 import com.event.eventmanagement.views.activity.invoice.data.PdfBody
+import com.event.eventmanagement.views.activity.report.data.FromToDateBody
 import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseBody
 import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseResponse
 import com.event.eventmanagement.views.auth.datasource.LoginBody
@@ -31,7 +32,7 @@ import com.event.eventmanagement.views.fragment.datasource.CustomerResponse
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.event.eventmanagement.views.fragment.datasource.EventResponse
 import com.event.eventmanagement.views.fragment.datasource.GetReportResponse
-import com.event.eventmanagement.views.fragment.datasource.GetVendorExpenseReponse
+import com.event.eventmanagement.views.fragment.datasource.GetVendorExpenseResponse
 import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.event.eventmanagement.views.fragment.datasource.PackageResponse
 import kotlinx.coroutines.launch
@@ -457,8 +458,8 @@ class UserViewModel : ViewModel() {
     }
 
 
-    private val _getVendorExpense: MutableLiveData<GetVendorExpenseReponse> = MutableLiveData()
-    val getVendorExpense: MutableLiveData<GetVendorExpenseReponse> get() = _getVendorExpense
+    private val _getVendorExpense: MutableLiveData<GetVendorExpenseResponse> = MutableLiveData()
+    val getVendorExpense: MutableLiveData<GetVendorExpenseResponse> get() = _getVendorExpense
 
     fun getVendorExpenses(vendorId: String, type: String) {
         viewModelScope.launch {
@@ -479,10 +480,24 @@ class UserViewModel : ViewModel() {
     val getReports: MutableLiveData<GetReportResponse> get() = _getReports
 
 
-    fun getReports(vendorId: String) {
+//    fun getReports(vendorId: String) {
+//        viewModelScope.launch {
+//            _isLoading.value = true
+//            val result = repository.getReports(vendorId)
+//            if (result is Result.Success) {
+//                _getReports.value = result.value
+//                _isLoading.value = false
+//            } else if (result is Result.Error) {
+//                _error.value = result.message
+//            }
+//            _isLoading.value = false
+//        }
+//    }
+
+    fun getReportsByDate(fromToDateBody: FromToDateBody, vendorId: String) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = repository.getReports(vendorId)
+            val result = repository.getReportsByDate(fromToDateBody, vendorId)
             if (result is Result.Success) {
                 _getReports.value = result.value
                 _isLoading.value = false
@@ -491,5 +506,6 @@ class UserViewModel : ViewModel() {
             }
             _isLoading.value = false
         }
+
     }
 }

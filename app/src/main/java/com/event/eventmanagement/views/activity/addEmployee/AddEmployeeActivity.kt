@@ -78,6 +78,33 @@ class AddEmployeeActivity : AppCompatActivity() {
             this@AddEmployeeActivity, R.layout.dropdown_item, stringArray
         )
         binding.selectSalaryType.setAdapter(adapter)
+        val maharashtraBankNames = listOf(
+            "State Bank of India",
+            "HDFC Bank",
+            "ICICI Bank",
+            "Axis Bank",
+            "Kotak Mahindra Bank",
+            "IndusInd Bank",
+            "Yes Bank",
+            "Bank of Maharashtra",
+            "Punjab National Bank",
+            "Bank of Baroda",
+            "Canara Bank",
+            "Union Bank of India",
+            "IDFC First Bank",
+            "Federal Bank",
+            "Bank of India",
+            "Central Bank of India",
+            "Indian Bank",
+            "IDBI Bank",
+            "UCO Bank",
+            "Indian Overseas Bank",
+            "RBL Bank"
+        )
 
+        val adapter2 = ArrayAdapter<String>(
+            this@AddEmployeeActivity, R.layout.dropdown_item, maharashtraBankNames
+        )
+        binding.bankName.setAdapter(adapter2)
     }
 }

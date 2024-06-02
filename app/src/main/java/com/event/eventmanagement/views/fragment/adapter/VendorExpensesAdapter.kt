@@ -14,7 +14,7 @@ import com.event.eventmanagement.views.fragment.datasource.ExpenseData
 class VendorExpensesAdapter() :
     RecyclerView.Adapter<VendorExpensesAdapter.VendorExpensesViewHolder>() {
 
-    private val list: ArrayList<ExpensePayment> = ArrayList()
+    private val list: ArrayList<ExpenseData> = ArrayList()
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -31,13 +31,13 @@ class VendorExpensesAdapter() :
         val current = list[position]
 
         holder.binding.expenseAmount.text = current.amount.toString()
-        holder.binding.expenseToWhome.text = current.expenseToWhom
+        holder.binding.expenseToWhome.text = current.vendor?.ownerName
         holder.binding.expenseDate.text = current.createdAt?.substring(0, 10)
 
 
     }
 
-    fun updateList(newList: List<ExpensePayment>) {
+    fun updateList(newList: List<ExpenseData>) {
         val diffCallback = object : DiffUtil.Callback() {
             override fun getOldListSize(): Int = list.size
             override fun getNewListSize(): Int = newList.size

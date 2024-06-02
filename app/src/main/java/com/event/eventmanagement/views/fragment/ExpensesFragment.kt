@@ -90,10 +90,7 @@ class ExpensesFragment : Fragment() {
         userViewModel.getVendorExpense.observe(viewLifecycleOwner){result ->
             vendorExpenses.clear()
             if (result.data.isNotEmpty()){
-                for(item in result.data){
-                    vendorExpenses.addAll(item.expensePayment)
-                }
-                vendorExpensesAdapter.updateList(vendorExpenses)
+                vendorExpensesAdapter.updateList(result.data)
             }else{
                 Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
             }

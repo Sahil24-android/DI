@@ -148,7 +148,7 @@ class AddVendorExpense : AppCompatActivity() {
                     remainingAmount =
                         data[0].expensePayment[data[0].expensePayment.lastIndex].remainingAmount
                     binding.remainingAmountText.text = "Remaining Amount: \u20B9 ${remainingAmount}"
-                }else{
+                } else {
                     remainingAmount = amount?.toInt()
                     binding.remainingAmountText.text = "Remaining Amount: \u20B9 ${remainingAmount}"
 

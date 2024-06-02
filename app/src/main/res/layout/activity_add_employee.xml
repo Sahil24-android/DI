@@ -340,7 +340,7 @@
                     android:id="@+id/selectSalaryType"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Select Package"
+                    android:hint="Salary Type"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -386,6 +386,7 @@
                         android:hint="Select">
 
                         <AutoCompleteTextView
+                            android:id="@+id/bankName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>

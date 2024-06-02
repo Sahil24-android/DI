@@ -138,6 +138,10 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
             loadFragment(CustomerFragment())
         }
 
+        binding.employee.setOnClickListener {
+            loadFragment(EmployeeFragment())
+        }
+
 //        binding.gallery.setOnClickListener {
 //            val sabPaisaGateway1 =
 //                SabPaisaGateway.builder()

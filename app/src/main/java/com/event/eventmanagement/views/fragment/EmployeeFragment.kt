@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.event.eventmanagement.MainActivity
 import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.FragmentEmployeeBinding
 import com.event.eventmanagement.views.activity.addEmployee.AddEmployeeActivity
@@ -24,8 +25,9 @@ class EmployeeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentEmployeeBinding.inflate(inflater, container, false)
+        (activity as MainActivity).hideToolbar()
         return binding.root
     }
 
