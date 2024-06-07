@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,13 +21,15 @@ import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.customerEventList.adapter.PaymentsAdapter
 import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.activity.invoice.InvoiceActivity
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@AndroidEntryPoint
 class AddPaymentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddPaymentBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel:UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +46,6 @@ class AddPaymentActivity : AppCompatActivity() {
         val currentDate = sdf.format(Date())
 
         val eventData = intent.getParcelableExtra<EventData>("event")
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         preferenceManager = PreferenceManager(this)
 
 

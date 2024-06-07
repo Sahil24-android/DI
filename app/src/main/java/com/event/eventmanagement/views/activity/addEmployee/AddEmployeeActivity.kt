@@ -5,15 +5,20 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.ActivityAddEmployeeBinding
+import com.event.eventmanagement.model.LocationViewModel
 import com.event.eventmanagement.model.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddEmployeeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddEmployeeBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel:UserViewModel by viewModels()
+    private val locationViewModel: LocationViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -25,7 +30,6 @@ class AddEmployeeActivity : AppCompatActivity() {
 //            insets
 //        }
 
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
         binding.selectPinCode.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
@@ -40,7 +44,7 @@ class AddEmployeeActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().length == 6) {
-                    userViewModel.getLocationsData(s.toString())
+                    locationViewModel.getLocationsData(s.toString())
                 } else {
                     binding.state.text = null
                     binding.city.text = null
@@ -51,7 +55,7 @@ class AddEmployeeActivity : AppCompatActivity() {
         })
 
 
-        userViewModel.locationData.observe(this) { result ->
+        locationViewModel.locationData.observe(this) { result ->
             if (result != null) {
                 val getFirstData = result.get(0)
                 val data = getFirstData.PostOffice.get(0)

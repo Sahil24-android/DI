@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -18,6 +19,7 @@ import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.ActivityAddNewEventBinding
 import com.event.eventmanagement.extras.AppUtils
 import com.event.eventmanagement.extras.CustomProgressDialog
+import com.event.eventmanagement.model.LocationViewModel
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.createCustomerEvent.adapter.CustomDateEventAdapter
@@ -27,11 +29,14 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddNewEventActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddNewEventBinding
     private lateinit var customDateEventAdapter: CustomDateEventAdapter
-    private lateinit var userViewModel: UserViewModel
+    private  val userViewModel: UserViewModel by viewModels()
+    private val locationViewModel: LocationViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
     private var vendorId:String? = null
     private val customDateEventList: ArrayList<EventDates> = ArrayList()
@@ -42,7 +47,6 @@ class AddNewEventActivity : AppCompatActivity() {
         binding = ActivityAddNewEventBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         preferenceManager = PreferenceManager(this)
         vendorId = preferenceManager.getVendorId().toString()
         binding.customDatesRadio.isChecked = true
@@ -60,6 +64,14 @@ class AddNewEventActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
 
+        }
+
+        locationViewModel.isLoading.observe(this){
+            if (it) {
+                dialog.show()
+            } else {
+                dialog.dismiss()
+            }
         }
 
         userViewModel.getEventPackages(vendorId!!)
@@ -148,7 +160,7 @@ class AddNewEventActivity : AppCompatActivity() {
 
                 override fun afterTextChanged(s: Editable?) {
                     if (s.toString().length == 6) {
-                        userViewModel.getLocationsData(s.toString())
+                        locationViewModel.getLocationsData(s.toString())
                     } else {
                         binding.state.text = null
                         binding.city.text = null
@@ -158,7 +170,7 @@ class AddNewEventActivity : AppCompatActivity() {
 
             })
 
-        userViewModel.locationData.observe(this) { result ->
+        locationViewModel.locationData.observe(this) { result ->
             if (result != null) {
                 val getFirstData = result.get(0)
                 if (getFirstData.PostOffice.isNotEmpty()) {

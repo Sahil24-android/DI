@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/actionBar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         style="@style/ActionBarStyle"
         android:orientation="horizontal"
@@ -28,7 +28,7 @@
             android:layout_marginStart="@dimen/_5sdp"
             android:text="New Package Masters"
             android:textColor="@color/white"
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_12sdp"
             android:textStyle="bold" />
 
     </LinearLayout>

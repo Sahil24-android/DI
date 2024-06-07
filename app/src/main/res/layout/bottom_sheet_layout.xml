@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Customer Name"
-        android:textSize="18sp"
+        android:textSize="@dimen/_12sdp"
         android:paddingBottom="8dp"/>
 
     <com.google.android.material.textview.MaterialTextView
@@ -21,7 +21,7 @@
         android:padding="8dp"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
-        android:textSize="16sp"/>
+        />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvEditEvent"
@@ -31,7 +31,7 @@
         android:padding="8dp"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
-        android:textSize="16sp"/>
+       />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvDeleteEvent"
@@ -41,7 +41,7 @@
         android:padding="8dp"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
-        android:textSize="16sp"/>
+        />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/exposeEvent"
@@ -51,6 +51,6 @@
         android:padding="8dp"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
-        android:textSize="16sp"/>
+        />
 
 </LinearLayout>

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.event.eventmanagement.MainActivity
@@ -27,11 +28,13 @@ import com.event.eventmanagement.views.fragment.datasource.ExpenseData
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
 
+@AndroidEntryPoint
 class ExpensesFragment : Fragment() {
     private lateinit var binding: FragmentExpensesFrgmentBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var vendorExpensesAdapter: VendorExpensesAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +47,6 @@ class ExpensesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentExpensesFrgmentBinding.inflate(inflater, container, false)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         preferenceManager = PreferenceManager(requireContext())
 
         (activity as MainActivity).hideToolbar()

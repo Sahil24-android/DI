@@ -35,13 +35,15 @@ import com.event.eventmanagement.views.fragment.datasource.GetReportResponse
 import com.event.eventmanagement.views.fragment.datasource.GetVendorExpenseResponse
 import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.event.eventmanagement.views.fragment.datasource.PackageResponse
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
+import javax.inject.Inject
 
-class UserViewModel : ViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor(private val repository: UserRepository) : ViewModel() {
 
-    private var repository: UserRepository = UserRepository()
 
     private val _isLoading: MutableLiveData<Boolean> = MutableLiveData()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -94,23 +96,6 @@ class UserViewModel : ViewModel() {
     }
 
 
-    private val _locations: MutableLiveData<ArrayList<PinCodeData>> = MutableLiveData()
-    val locationData: LiveData<ArrayList<PinCodeData>> get() = _locations
-
-    fun getLocationsData(pincode: String) {
-        viewModelScope.launch {
-            _isLoading.value = true
-            val result = repository.getLocationData(pincode)
-            if (result is Result.Success) {
-                _locations.value = result.value
-                _isLoading.value = false
-            } else if (result is Result.Error) {
-                _error.value = result.message
-                _isLoading.value = false
-            }
-            _isLoading.value = false
-        }
-    }
 
     private val _registerUser: MutableLiveData<RegisterUserResponse> = MutableLiveData()
     val userRegister: LiveData<RegisterUserResponse> get() = _registerUser
@@ -264,10 +249,10 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun getEventByCustomer(customer_id: String) {
+    fun getEventByCustomer(customerId: String) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = repository.getEventByCustomer(customer_id)
+            val result = repository.getEventByCustomer(customerId)
             if (result is Result.Success) {
                 _getEventByDate.value = result.value
             } else if (result is Result.Error) {

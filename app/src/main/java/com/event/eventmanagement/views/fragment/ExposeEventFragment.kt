@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.event.eventmanagement.MainActivity
@@ -12,13 +13,15 @@ import com.event.eventmanagement.databinding.FragmentExposeEventBinding
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.fragment.adapter.ExposedEventAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class ExposeEventFragment : Fragment() {
 
     private lateinit var binding:FragmentExposeEventBinding
     private lateinit var exposedEventAdapter: ExposedEventAdapter
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +34,6 @@ class ExposeEventFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
        binding = FragmentExposeEventBinding.inflate(inflater,container,false)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class]
         preferenceManager = PreferenceManager(requireContext())
         (activity as MainActivity).hideToolbar()
         return binding.root

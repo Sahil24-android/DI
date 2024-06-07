@@ -7,10 +7,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.ActivityEventBinding
 import com.event.eventmanagement.model.UserViewModel
@@ -22,10 +24,12 @@ import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.activity.exposed.ExposingEventActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textview.MaterialTextView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener {
     private lateinit var binding: ActivityEventBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel:UserViewModel by viewModels()
     private lateinit var adapter: CustomerEventAdapter
     private lateinit var exposedEventAdapter: CustomerExposedEventAdapter
     private lateinit var preferenceManager: PreferenceManager
@@ -43,7 +47,6 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 //            insets
 //        }
 
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         adapter = CustomerEventAdapter(this, this)
         preferenceManager = PreferenceManager(this)
         binding.eventRecyclerView.layoutManager =
@@ -61,9 +64,6 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 //        snapHelper2.attachToRecyclerView(binding.eventRecyclerView)
 
 
-//
-//
-//
 
         val regex = Regex("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
         userViewModel.getAllCustomerEvents.observe(this) {
@@ -106,6 +106,7 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
                 Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show()
             }
         }
+
 
 
         binding.myEventTab.setOnClickListener {

@@ -1,13 +1,12 @@
 package com.event.eventmanagement.views.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.event.eventmanagement.R
@@ -15,29 +14,25 @@ import com.event.eventmanagement.databinding.FragmentAccountReportsBinding
 import com.event.eventmanagement.extras.AppUtils
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
-import com.event.eventmanagement.views.activity.addeventPayments.AddPaymentActivity
-import com.event.eventmanagement.views.activity.customerEventList.data.EventData
-import com.event.eventmanagement.views.activity.exposed.ExposingEventActivity
 import com.event.eventmanagement.views.activity.report.data.FromToDateBody
 import com.event.eventmanagement.views.fragment.adapter.TransactionSummaryAdapter
 import com.event.eventmanagement.views.fragment.datasource.ReportData
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
-import com.google.firebase.storage.internal.Util
-import kotlinx.coroutines.CoroutineScope
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 
+@AndroidEntryPoint
 class AccountReportsFragment : Fragment() {
     private lateinit var binding: FragmentAccountReportsBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var transactionSummaryAdapter: TransactionSummaryAdapter
 
@@ -50,9 +45,8 @@ class AccountReportsFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAccountReportsBinding.inflate(inflater, container, false)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         preferenceManager = PreferenceManager(requireContext())
         return binding.root
     }
@@ -166,7 +160,7 @@ class AccountReportsFragment : Fragment() {
         val lastDayOfMonth = calendar.time
 
         // Define the desired date format
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd",Locale.US)
 
         // Format the dates
         val startDate = dateFormat.format(firstDayOfMonth)

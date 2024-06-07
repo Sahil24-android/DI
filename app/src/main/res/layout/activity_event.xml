@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/actionBar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@drawable/linear_gradient"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -29,7 +29,7 @@
             android:fontFamily="@font/poppins"
             android:text="Events"
             android:textColor="@color/white"
-            android:textSize="@dimen/_14sdp" />
+            android:textSize="@dimen/_12sdp" />
     </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Click On The Event To Add Payments"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_11sdp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -74,7 +74,7 @@
                     android:gravity="center"
                     android:text="My Events"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textSize="@dimen/_11sdp" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/exposedEventsTab"
@@ -83,7 +83,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Exposed Events"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textSize="@dimen/_11sdp" />
             </LinearLayout>
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"

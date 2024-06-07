@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.event.eventmanagement.MainActivity
@@ -21,12 +22,14 @@ import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class EventTypeMastersFragment : Fragment() {
     private lateinit var binding: FragmentEventTypeBinding
     private val eventsMap: MutableMap<Int, List<String>> = mutableMapOf()
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var eventAdapter: EventAdapter
     private lateinit var preferenceManager: PreferenceManager
     private var vendorId:String?=null
@@ -41,7 +44,6 @@ class EventTypeMastersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEventTypeBinding.inflate(inflater, container, false)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         eventAdapter = EventAdapter(requireContext())
         preferenceManager = PreferenceManager(requireContext())
         (activity as MainActivity).hideToolbar()

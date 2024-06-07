@@ -2,8 +2,9 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
+    id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
     id("com.google.gms.google-services")
-
 }
 
 android {
@@ -61,6 +62,7 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.activity:activity-ktx:1.9.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("com.google.firebase:firebase-storage-ktx:21.0.0")
     implementation("androidx.activity:activity:1.9.0")
 
@@ -91,7 +93,12 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.9.1")
 
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-compiler:2.50")
 
+}
 
+kapt {
+    correctErrorTypes = true
 }
 

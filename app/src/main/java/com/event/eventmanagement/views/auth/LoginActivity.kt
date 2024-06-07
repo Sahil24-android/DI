@@ -3,6 +3,7 @@ package com.event.eventmanagement.views.auth
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.event.eventmanagement.MainActivity
@@ -13,10 +14,12 @@ import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.auth.datasource.LoginBody
 import com.event.eventmanagement.views.fragment.datasource.CustomerResponse
 import com.google.gson.annotations.SerializedName
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel:UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
     private val loader by lazy { CustomProgressDialog(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +27,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         preferenceManager = PreferenceManager(this)
 
         binding.register.setOnClickListener {

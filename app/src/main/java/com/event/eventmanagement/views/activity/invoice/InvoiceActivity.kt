@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
@@ -22,6 +23,7 @@ import com.event.eventmanagement.views.activity.createCustomerEvent.EventBodyReq
 import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.activity.invoice.data.PdfBody
 import com.google.firebase.storage.FirebaseStorage
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -29,11 +31,12 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@AndroidEntryPoint
 class InvoiceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityInvoiceBinding
     private lateinit var preferenceManager: PreferenceManager
     private var ownerName: String? = null
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel:UserViewModel by viewModels()
     private val progressDialog by lazy { AppUtils.showProgressDialog(this) }
     private var fileName :String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +44,6 @@ class InvoiceActivity : AppCompatActivity() {
         binding = ActivityInvoiceBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
         progressDialog.show()
 

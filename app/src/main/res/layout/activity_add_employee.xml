@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/actionBar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@drawable/linear_gradient"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -29,7 +29,7 @@
             android:fontFamily="@font/poppins"
             android:text="Add Employees"
             android:textColor="@color/white"
-            android:textSize="@dimen/_14sdp" />
+            android:textSize="@dimen/_12sdp" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView

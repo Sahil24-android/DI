@@ -25,7 +25,9 @@ import com.event.eventmanagement.views.fragment.ExpensesFragment
 import com.event.eventmanagement.views.fragment.PackageMasterFragment
 import com.google.android.material.button.MaterialButton
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var preferenceManager: PreferenceManager

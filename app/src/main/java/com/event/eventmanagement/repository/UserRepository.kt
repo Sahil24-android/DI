@@ -1,5 +1,6 @@
 package com.event.eventmanagement.repository
 
+import com.event.eventmanagement.apis.ApiServices
 import com.event.eventmanagement.apis.Result
 import com.event.eventmanagement.apis.RetrofitClient
 import com.event.eventmanagement.views.activity.addeventPayments.PaymentBody
@@ -33,16 +34,16 @@ import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.event.eventmanagement.views.fragment.datasource.PackageResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
+import javax.inject.Inject
 
-class UserRepository() {
+class UserRepository @Inject constructor(private val apiServices: ApiServices ) {
 
-    private val apiInterface = RetrofitClient.network
-    private val apiInterfaceLocation = RetrofitClient.locationNetwork
+   // private val apiInterfaceLocation = RetrofitClient.locationNetwork
     suspend fun getServices(): Result<ServicesData> {
         return try {
-            val response = apiInterface.getServices()
+            val response = apiServices.getServices()
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -55,7 +56,7 @@ class UserRepository() {
 
     suspend fun getServicesVendor(serviceId: String): Result<PackageData> {
         return try {
-            val response = apiInterface.getServices(serviceId)
+            val response = apiServices.getServices(serviceId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -66,50 +67,50 @@ class UserRepository() {
         }
     }
 
-    suspend fun getLocationData(pinCode: String): Result<ArrayList<PinCodeData>> {
-        return try {
-            val response = apiInterfaceLocation.getDataFromPinCode(pinCode)
-            if (response.isSuccessful) {
-                Result.Success(response.body()!!)
-            } else {
-                Result.Error("Failed to get services: ${response.message()}")
-            }
-        } catch (e: Exception) {
-            Result.Error("Exception occurred: ${e.message}")
-        }
-    }
+//    suspend fun getLocationData(pinCode: String): Result<ArrayList<PinCodeData>> {
+//        return try {
+//            val response = apiInterfaceLocation.getDataFromPinCode(pinCode)
+//            if (response.isSuccessful) {
+//                Result.Success(response.body()!!)
+//            } else {
+//                Result.Error("Failed to get services: ${response.message()}")
+//            }
+//        } catch (e: Exception) {
+//            Result.Error("Exception occurred: ${e.message}")
+//        }
+//    }
 
     suspend fun registerUser(
         data: RegistrationDataSend,
         multipartFormData: MultipartBody.Part
     ): Result<RegisterUserResponse> {
         return try {
-            val companyName = RequestBody.create("text/plain".toMediaTypeOrNull(), data.companyName)
-            val ownerName = RequestBody.create("text/plain".toMediaTypeOrNull(), data.ownerName)
-            val city = RequestBody.create("text/plain".toMediaTypeOrNull(), data.city)
-            val state = RequestBody.create("text/plain".toMediaTypeOrNull(), data.state)
-            val country = RequestBody.create("text/plain".toMediaTypeOrNull(), data.country)
-            val pinCode = RequestBody.create("text/plain".toMediaTypeOrNull(), data.pinCodeData)
-            val address = RequestBody.create("text/plain".toMediaTypeOrNull(), data.address)
+            val companyName = data.companyName.toRequestBody("text/plain".toMediaTypeOrNull())
+            val ownerName = data.ownerName.toRequestBody("text/plain".toMediaTypeOrNull())
+            val city = data.city.toRequestBody("text/plain".toMediaTypeOrNull())
+            val state = data.state.toRequestBody("text/plain".toMediaTypeOrNull())
+            val country = data.country.toRequestBody("text/plain".toMediaTypeOrNull())
+            val pinCode = data.pinCodeData.toRequestBody("text/plain".toMediaTypeOrNull())
+            val address = data.address.toRequestBody("text/plain".toMediaTypeOrNull())
             val mobileNumber =
-                RequestBody.create("text/plain".toMediaTypeOrNull(), data.mobileNumber)
-            val aleternateNumber =
-                RequestBody.create("text/plain".toMediaTypeOrNull(), data.alternativeMobileNumber)
-            val serviceId = RequestBody.create("text/plain".toMediaTypeOrNull(), data.serviceId)
+                data.mobileNumber.toRequestBody("text/plain".toMediaTypeOrNull())
+            val alternateNumber =
+                data.alternativeMobileNumber.toRequestBody("text/plain".toMediaTypeOrNull())
+            val serviceId = data.serviceId.toRequestBody("text/plain".toMediaTypeOrNull())
             val servicePackageId =
-                RequestBody.create("text/plain".toMediaTypeOrNull(), data.servicePackageId)
-            val password = RequestBody.create("text/plain".toMediaTypeOrNull(), data.password)
-            val locationId = RequestBody.create("text/plain".toMediaTypeOrNull(), "0")
-            val isActive = RequestBody.create("text/plain".toMediaTypeOrNull(), "0")
+                data.servicePackageId.toRequestBody("text/plain".toMediaTypeOrNull())
+            val password = data.password.toRequestBody("text/plain".toMediaTypeOrNull())
+            val locationId = "0".toRequestBody("text/plain".toMediaTypeOrNull())
+            val isActive = "0".toRequestBody("text/plain".toMediaTypeOrNull())
 
-            val response = apiInterface.registerUser(
+            val response = apiServices.registerUser(
                 multipartFormData,
                 serviceId,
                 servicePackageId,
                 companyName,
                 ownerName,
                 mobileNumber,
-                aleternateNumber,
+                alternateNumber,
                 address,
                 pinCode,
                 locationId,
@@ -128,16 +129,12 @@ class UserRepository() {
         }
     }
 
-    private fun createPartFromString(descriptionString: String): RequestBody {
-        return RequestBody.create(
-            okhttp3.MultipartBody.FORM, descriptionString
-        )
-    }
+
 
 
     suspend fun addEvent(eventRequest: EventBody): Result<EventResponse> {
         return try {
-            val response = apiInterface.createEvent(eventRequest)
+            val response = apiServices.createEvent(eventRequest)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -151,7 +148,7 @@ class UserRepository() {
 
     suspend fun createPackage(packageBody: PackageBody): Result<PackageResponse> {
         return try {
-            val response = apiInterface.createPackage(packageBody)
+            val response = apiServices.createPackage(packageBody)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -164,7 +161,7 @@ class UserRepository() {
 
     suspend fun getEvents(vendorId: String): Result<AllEventsResponse> {
         return try {
-            val response = apiInterface.getEvents(vendorId)
+            val response = apiServices.getEvents(vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -177,7 +174,7 @@ class UserRepository() {
 
     suspend fun getPackagesVendor(vendorId: String): Result<AllPackageResponse> {
         return try {
-            val response = apiInterface.getEventPackage(vendorId)
+            val response = apiServices.getEventPackage(vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -190,7 +187,7 @@ class UserRepository() {
 
     suspend fun addNewEvent(eventBodyRequest: EventBodyRequest): Result<NewEventResponse> {
         return try {
-            val response = apiInterface.addNewEvent(eventBodyRequest)
+            val response = apiServices.addNewEvent(eventBodyRequest)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -203,7 +200,7 @@ class UserRepository() {
 
     suspend fun getAllEvents(vendorId: String): Result<GetCustomerEventDataList> {
         return try {
-            val response = apiInterface.getAllCustomerEvents(vendorId)
+            val response = apiServices.getAllCustomerEvents(vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -216,7 +213,7 @@ class UserRepository() {
 
     suspend fun allEventDates(vendorId: String): Result<AllEventDates> {
         return try {
-            val response = apiInterface.getEventDateForCalendar(vendorId)
+            val response = apiServices.getEventDateForCalendar(vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -229,7 +226,7 @@ class UserRepository() {
 
     suspend fun getEventByDate(date: String, vendorId: String): Result<GetCustomerEventDataList> {
         return try {
-            val response = apiInterface.getEventByDate(date, vendorId)
+            val response = apiServices.getEventByDate(date, vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -242,7 +239,7 @@ class UserRepository() {
 
     suspend fun getEventByCustomer(customerId: String): Result<GetCustomerEventDataList> {
         return try {
-            val response = apiInterface.getEventByCustomer(customerId)
+            val response = apiServices.getEventByCustomer(customerId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -255,7 +252,7 @@ class UserRepository() {
 
     suspend fun addPayment(paymentBody: PaymentBody): Result<PaymentResponse> {
         return try {
-            val response = apiInterface.addPayment(paymentBody)
+            val response = apiServices.addPayment(paymentBody)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -269,7 +266,7 @@ class UserRepository() {
 
     suspend fun getAllCustomers(): Result<CustomerResponse> {
         return try {
-            val response = apiInterface.getAllCustomer()
+            val response = apiServices.getAllCustomer()
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -283,7 +280,7 @@ class UserRepository() {
 
     suspend fun login(loginBody: LoginBody): Result<LoginResponse> {
         return try {
-            val response = apiInterface.login(loginBody)
+            val response = apiServices.login(loginBody)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -297,7 +294,7 @@ class UserRepository() {
 
     suspend fun updatePdfUrl(pdfBody: PdfBody): Result<ResponseBody> {
         return try {
-            val response = apiInterface.updatePdfUrl(pdfBody)
+            val response = apiServices.updatePdfUrl(pdfBody)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -310,7 +307,7 @@ class UserRepository() {
 
     suspend fun getAllVendors(): Result<VendorListResponse> {
         return try {
-            val response = apiInterface.getAllVendors()
+            val response = apiServices.getAllVendors()
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -324,7 +321,7 @@ class UserRepository() {
 
     suspend fun transferEvent(exposedBody: ExposedBody): Result<ExposedResponse> {
         return try {
-            val response = apiInterface.transferEvent(exposedBody)
+            val response = apiServices.transferEvent(exposedBody)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -338,7 +335,7 @@ class UserRepository() {
 
     suspend fun eventExposedByMe(vendorId: String): Result<GetCustomerEventDataList> {
         return try {
-            val response = apiInterface.eventExposedByMe(vendorId)
+            val response = apiServices.eventExposedByMe(vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -351,7 +348,7 @@ class UserRepository() {
 
     suspend fun eventExposedToMe(vendorId: String): Result<GetCustomerEventDataList> {
         return try {
-            val response = apiInterface.eventExposedToMe(vendorId)
+            val response = apiServices.eventExposedToMe(vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -367,7 +364,7 @@ class UserRepository() {
 
     suspend fun getEventByVendorId(vendorId: String): Result<GetCustomerEventDataList> {
         return try {
-            val response = apiInterface.getEventByVendorId(vendorId)
+            val response = apiServices.getEventByVendorId(vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -380,7 +377,7 @@ class UserRepository() {
 
     suspend fun addVendorExpense(expenseBody: VendorExpenseBody): Result<VendorExpenseResponse> {
         return try {
-            val response = apiInterface.addVendorExpense(expenseBody)
+            val response = apiServices.addVendorExpense(expenseBody)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -394,7 +391,7 @@ class UserRepository() {
 
     suspend fun getVendorExpenses(vendorId: String, type: String): Result<GetVendorExpenseResponse> {
         return try {
-            val response = apiInterface.getVendorExpenses(vendorId, type)
+            val response = apiServices.getVendorExpenses(vendorId, type)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
@@ -405,18 +402,7 @@ class UserRepository() {
         }
     }
 
-    suspend fun getReports(vendorId: String): Result<GetReportResponse> {
-        return try {
-            val response = apiInterface.getReports(vendorId)
-            if (response.isSuccessful) {
-                Result.Success(response.body()!!)
-            } else {
-                Result.Error("Failed to get services: ${response.message()}")
-            }
-        } catch (e: Exception) {
-            Result.Error("Exception occurred: ${e.message}")
-        }
-    }
+
 
 
     suspend fun getReportsByDate(
@@ -424,7 +410,7 @@ class UserRepository() {
         vendorId: String
     ): Result<GetReportResponse> {
         return try {
-            val response = apiInterface.getReportsByDate(fromToDateBody, vendorId)
+            val response = apiServices.getReportsByDate(fromToDateBody, vendorId)
             if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             }else{

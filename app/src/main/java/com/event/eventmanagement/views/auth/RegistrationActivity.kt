@@ -13,14 +13,17 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.event.eventmanagement.databinding.ActivityRegistrationBinding
 import com.event.eventmanagement.extras.CustomProgressDialog
+import com.event.eventmanagement.model.LocationViewModel
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.views.auth.datasource.RegistrationDataSend
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -32,17 +35,17 @@ import java.io.IOException
 import java.io.InputStream
 
 
+@AndroidEntryPoint
 class RegistrationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegistrationBinding
     private lateinit var progressDialog: ProgressDialog
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel:UserViewModel by viewModels()
+    private val locationViewModel: LocationViewModel by viewModels()
     private val loader by lazy { CustomProgressDialog(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-
 
         progressDialog = ProgressDialog(this)
 
@@ -54,6 +57,14 @@ class RegistrationActivity : AppCompatActivity() {
         }
 
         userViewModel.isLoading.observe(this) {
+            if (it) {
+                loader.show()
+            } else {
+                loader.dismiss()
+            }
+        }
+
+        locationViewModel.isLoading.observe(this){
             if (it) {
                 loader.show()
             } else {
@@ -81,7 +92,7 @@ class RegistrationActivity : AppCompatActivity() {
             }
         }
 
-        binding.selectServiceType.setOnItemClickListener { parent, view, position, id ->
+        binding.selectServiceType.setOnItemClickListener { _, _, position, _ ->
             val selectedString = list[position]
             if (selectedString == "Select") {
             } else {
@@ -93,7 +104,7 @@ class RegistrationActivity : AppCompatActivity() {
 
         val packageList = ArrayList<String>()
         val packageMap = HashMap<String, Int>()
-        binding.selectServicePackage.setOnItemClickListener { parent, view, position, id ->
+        binding.selectServicePackage.setOnItemClickListener { _, _, position, _ ->
             val selectedString = packageList[position]
             if (selectedString == "Select") {
             } else {
@@ -235,7 +246,7 @@ class RegistrationActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().length == 6) {
-                    userViewModel.getLocationsData(s.toString())
+                    locationViewModel.getLocationsData(s.toString())
                 } else {
                     binding.state.text = null
                     binding.city.text = null
@@ -245,7 +256,7 @@ class RegistrationActivity : AppCompatActivity() {
 
         })
 
-        userViewModel.locationData.observe(this) { result ->
+        locationViewModel.locationData.observe(this) { result ->
             if (result != null) {
                 val getFirstData = result.get(0)
                 if (getFirstData.PostOffice.isNotEmpty()) {
@@ -288,7 +299,7 @@ class RegistrationActivity : AppCompatActivity() {
             if (inputStream != null) {
                 val file = createTempFile(inputStream)
                 if (file != null) {
-                    val requestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+                    val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
                     imagePart = MultipartBody.Part.createFormData("image", file.name, requestBody)
                 }
             }

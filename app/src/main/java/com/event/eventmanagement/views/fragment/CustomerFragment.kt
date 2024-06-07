@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.event.eventmanagement.MainActivity
@@ -15,10 +16,12 @@ import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.views.activity.customerEventList.EventActivity
 import com.event.eventmanagement.views.fragment.adapter.CustomerDetailsAdapter
 import com.event.eventmanagement.views.fragment.datasource.CustomerDetails
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CustomerFragment : Fragment(), CustomerDetailsAdapter.OnCustomerClickListener {
     private lateinit var binding: FragmentCustomerBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var adapter: CustomerDetailsAdapter
 
 
@@ -35,7 +38,6 @@ class CustomerFragment : Fragment(), CustomerDetailsAdapter.OnCustomerClickListe
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCustomerBinding.inflate(inflater, container, false)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         adapter = CustomerDetailsAdapter(this)
         (activity as MainActivity).hideToolbar()
         return binding.root

@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,9 +21,12 @@ import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.activity.vendorExpense.data.VendorExpenseBody
 import com.event.eventmanagement.views.auth.datasource.Vendor
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class AddVendorExpense : AppCompatActivity() {
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel:UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var binding: ActivityAddVendorExpenseBinding
     private val vendorList: ArrayList<Vendor> = ArrayList()
@@ -38,7 +42,6 @@ class AddVendorExpense : AppCompatActivity() {
 //            insets
 //        }
 
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         preferenceManager = PreferenceManager(this)
 
 

@@ -31,6 +31,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_10sdp"
+                        android:gravity="center"
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:orientation="horizontal"
                         android:weightSum="2">
@@ -42,7 +43,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_weight="1"
-                            android:minHeight="@dimen/_50sdp"
+                            android:minHeight="@dimen/_40sdp"
                             android:text="+ New\nEvent"
                             app:icon="@drawable/baseline_event_24"
                             app:iconSize="@dimen/_20sdp" />
@@ -65,6 +66,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_5sdp"
+                        android:gravity="center"
+
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:orientation="horizontal"
                         android:weightSum="2">
@@ -76,7 +79,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="1"
-                            android:minHeight="@dimen/_50sdp"
+                            android:minHeight="@dimen/_40sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:text="Exposing"
                             app:icon="@drawable/baseline_compare_arrows_24"
@@ -88,7 +91,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:minHeight="@dimen/_50sdp"
+                            android:minHeight="@dimen/_40sdp"
                             android:text="Customers"
                             app:icon="@drawable/baseline_groups_2_24"
                             app:iconSize="@dimen/_20sdp" />
@@ -102,6 +105,8 @@
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
+                        android:gravity="center"
+
                         android:orientation="horizontal"
                         android:weightSum="2">
 
@@ -114,7 +119,7 @@
                             android:layout_gravity="end"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_weight="1"
-                            android:minHeight="@dimen/_50sdp"
+                            android:minHeight="@dimen/_40sdp"
                             android:text="Payment"
                             app:icon="@drawable/baseline_payment_24"
                             app:iconSize="@dimen/_20sdp" />
@@ -126,7 +131,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="1"
-                            android:minHeight="@dimen/_50sdp"
+                            android:minHeight="@dimen/_40sdp"
                             android:text="Expenses"
                             app:icon="@drawable/baseline_payment_24"
                             app:iconSize="@dimen/_20sdp" />
@@ -139,6 +144,8 @@
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_5sdp"
+                        android:gravity="center"
+
                         android:orientation="horizontal"
                         android:visibility="visible"
                         android:weightSum="2">
@@ -150,7 +157,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_weight="1"
-                            android:minHeight="@dimen/_50sdp"
+                            android:minHeight="@dimen/_40sdp"
                             android:text="Event\n Master"
                             app:icon="@drawable/baseline_event_24"
                             app:iconSize="@dimen/_20sdp" />
@@ -161,7 +168,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:minHeight="@dimen/_50sdp"
+                            android:minHeight="@dimen/_40sdp"
                             android:text="Package\nMaster"
                             app:icon="@drawable/baseline_wysiwyg_24"
                             app:iconSize="@dimen/_20sdp" />
@@ -173,6 +180,7 @@
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:visibility="visible"
+                        android:gravity="center"
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:orientation="horizontal"
                         android:weightSum="2">
@@ -184,7 +192,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_weight="1"
-                            android:minHeight="@dimen/_50sdp"
+                            android:minHeight="@dimen/_40sdp"
                             android:text="Employees"
                             app:icon="@drawable/baseline_groups_2_24"
                             app:iconSize="@dimen/_20sdp" />
@@ -197,7 +205,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="1"
-                            android:minHeight="@dimen/_50sdp"
+                            android:minHeight="@dimen/_40sdp"
                             android:text="Others"
                             app:icon="@drawable/baseline_compare_arrows_24"
                             app:iconSize="@dimen/_20sdp" />

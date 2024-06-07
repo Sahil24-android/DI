@@ -11,7 +11,7 @@
         android:id="@+id/actionBar"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@drawable/linear_gradient"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -63,7 +63,7 @@
                             android:layout_weight="0.2"
                             android:padding="@dimen/_5sdp"
                             android:text="Welcome, Hemant"
-                            android:textSize="@dimen/_14sdp" />
+                            android:textSize="@dimen/_12sdp" />
                         <ImageView
                             android:id="@+id/filter"
                             android:layout_weight="0.8"
@@ -121,7 +121,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="+ \u20b9 1000"
                                     android:textColor="@color/green_pays"
-                                    android:textSize="@dimen/_16sdp"
+                                    android:textSize="@dimen/_14sdp"
                                     android:textStyle="bold" />
 
                             </LinearLayout>
@@ -172,7 +172,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="\u20b9 1000"
                                         android:textColor="@color/black"
-                                        android:textSize="@dimen/_16sdp" />
+                                        android:textSize="@dimen/_14sdp" />
 
                                 </LinearLayout>
 
@@ -211,7 +211,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="- \u20b9 1000"
                                         android:textColor="@color/error_red"
-                                        android:textSize="@dimen/_16sdp"
+                                        android:textSize="@dimen/_14sdp"
                                         android:textStyle="bold" />
 
 

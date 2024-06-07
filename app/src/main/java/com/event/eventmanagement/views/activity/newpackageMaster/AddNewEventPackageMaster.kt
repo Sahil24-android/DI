@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.ListView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.event.eventmanagement.R
@@ -17,11 +18,13 @@ import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.fragment.datasource.PackageBody
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddNewEventPackageMaster : AppCompatActivity() {
     private lateinit var binding: ActivityAddNewEventPackageMasterBinding
     private val checkedEventItem: ArrayList<String> = ArrayList()
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
     private var vendorId:String?= null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +32,6 @@ class AddNewEventPackageMaster : AppCompatActivity() {
         binding = ActivityAddNewEventPackageMasterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         preferenceManager  = PreferenceManager(this)
 
         vendorId = preferenceManager.getVendorId().toString()

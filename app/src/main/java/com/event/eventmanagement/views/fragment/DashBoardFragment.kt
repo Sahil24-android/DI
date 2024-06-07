@@ -7,20 +7,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CalendarView
-import android.widget.CalendarView.OnDateChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.CalendarDay
 import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener
 import com.event.eventmanagement.MainActivity
 import com.event.eventmanagement.R
-import com.event.eventmanagement.databinding.ActivityMainBinding
 import com.event.eventmanagement.databinding.FragmentDashBoardBinding
-import com.event.eventmanagement.extras.AppUtils
 import com.event.eventmanagement.extras.CustomProgressDialog
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
@@ -28,19 +26,18 @@ import com.event.eventmanagement.views.activity.createCustomerEvent.AddNewEventA
 import com.event.eventmanagement.views.activity.customerEventList.EventActivity
 import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.fragment.adapter.DashBoardEventAdapter
-import com.google.android.material.datepicker.DayViewDecorator
-import com.sabpaisa.gateway.android.sdk.SabPaisaGateway
 import com.sabpaisa.gateway.android.sdk.interfaces.IPaymentSuccessCallBack
 import com.sabpaisa.gateway.android.sdk.models.TransactionResponsesModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-
+@AndroidEntryPoint
 class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionResponsesModel> {
 
     private lateinit var binding: FragmentDashBoardBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var dashBoardEventAdapter: DashBoardEventAdapter
     private var exposedListData: ArrayList<EventData> = ArrayList()
@@ -56,7 +53,6 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDashBoardBinding.inflate(inflater, container, false)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         (activity as MainActivity).showToolbar()
         preferenceManager = PreferenceManager(requireContext())
 

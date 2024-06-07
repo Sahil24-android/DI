@@ -34,7 +34,7 @@
                     android:id="@+id/eventDateCard"
                     android:layout_width="match_parent"
                     android:text="25\nOCT"
-                    android:textSize="@dimen/_18sdp"
+                    android:textSize="@dimen/_14sdp"
                     android:gravity="center"
                     android:layout_height="match_parent"/>
             </LinearLayout>

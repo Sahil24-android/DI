@@ -52,10 +52,7 @@ interface ApiServices {
     ): Response<PackageData>
 
 
-    @GET("pincode/{pincode}")
-    suspend fun getDataFromPinCode(
-        @Path("pincode") pincode: String
-    ): Response<ArrayList<PinCodeData>>
+
 
 
     //    service_id:1

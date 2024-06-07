@@ -3,19 +3,25 @@ package com.event.eventmanagement.views.activity.profile
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.event.eventmanagement.R
 import com.event.eventmanagement.apis.RetrofitClient
 import com.event.eventmanagement.databinding.ActivityProfileBinding
+import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.auth.LoginActivity
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
     private lateinit var preferenceManager: PreferenceManager
+    private val userViewModel: UserViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()

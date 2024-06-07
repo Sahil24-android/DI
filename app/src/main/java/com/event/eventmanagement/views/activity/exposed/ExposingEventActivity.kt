@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,10 +18,12 @@ import com.event.eventmanagement.views.activity.customerEventList.adapter.Custom
 import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.activity.exposed.data.ExposedBody
 import com.event.eventmanagement.views.auth.datasource.Vendor
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener {
     private lateinit var binding: ActivityExposingEventBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel:UserViewModel by viewModels()
     private val vendorList: ArrayList<Vendor> = ArrayList()
     private lateinit var preferenceManager: PreferenceManager
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +34,6 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
 
         preferenceManager = PreferenceManager(this)
 
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         val eventData = intent.getParcelableExtra<EventData>("event")
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
 //            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
