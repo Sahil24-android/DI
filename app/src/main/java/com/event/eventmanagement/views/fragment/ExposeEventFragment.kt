@@ -23,6 +23,7 @@ class ExposeEventFragment : Fragment() {
     private lateinit var exposedEventAdapter: ExposedEventAdapter
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -42,12 +43,13 @@ class ExposeEventFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        token = "Bearer ${preferenceManager.getToken()}"
 
         exposedEventAdapter = ExposedEventAdapter(requireContext())
         binding.exposeRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.exposeRecycler.adapter = exposedEventAdapter
 
-        userViewModel.eventExposedByMe(preferenceManager.getVendorId().toString())
+        userViewModel.eventExposedByMe(token,preferenceManager.getVendorId().toString())
 
         userViewModel.eventExposedByMe.observe(viewLifecycleOwner){response ->
             if (response.data.isNotEmpty()){
@@ -62,7 +64,7 @@ class ExposeEventFragment : Fragment() {
 
 
         binding.swipeToRefresh.setOnRefreshListener {
-            userViewModel.eventExposedByMe(preferenceManager.getVendorId().toString())
+            userViewModel.eventExposedByMe(token,preferenceManager.getVendorId().toString())
             binding.swipeToRefresh.isRefreshing = false
         }
     }

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.event.eventmanagement.MainActivity
 import com.event.eventmanagement.databinding.FragmentCustomerBinding
 import com.event.eventmanagement.model.UserViewModel
+import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.customerEventList.EventActivity
 import com.event.eventmanagement.views.fragment.adapter.CustomerDetailsAdapter
 import com.event.eventmanagement.views.fragment.datasource.CustomerDetails
@@ -23,7 +24,8 @@ class CustomerFragment : Fragment(), CustomerDetailsAdapter.OnCustomerClickListe
     private lateinit var binding: FragmentCustomerBinding
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var adapter: CustomerDetailsAdapter
-
+    private lateinit var preferenceManager: PreferenceManager
+    private var token: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,12 +42,15 @@ class CustomerFragment : Fragment(), CustomerDetailsAdapter.OnCustomerClickListe
         binding = FragmentCustomerBinding.inflate(inflater, container, false)
         adapter = CustomerDetailsAdapter(this)
         (activity as MainActivity).hideToolbar()
+        preferenceManager = PreferenceManager(requireContext())
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userViewModel.getAllCustomers()
+
+        token = "Bearer ${preferenceManager.getToken()}"
+        userViewModel.getAllCustomers(token,preferenceManager.getVendorId().toString())
         binding.customerDetailsRv.layoutManager = LinearLayoutManager(requireContext())
         binding.customerDetailsRv.adapter = adapter
 

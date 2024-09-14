@@ -55,7 +55,7 @@
                     <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="@dimen/_50sdp"
                         android:layout_height="@dimen/_50sdp"
-                        android:src="@drawable/logo_new_new"
+                        android:src="@drawable/logo_new_events"
                         app:shapeAppearance="@style/CornerCut" />
 
                     <com.google.android.material.textview.MaterialTextView

@@ -35,6 +35,7 @@ class AccountReportsFragment : Fragment() {
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var transactionSummaryAdapter: TransactionSummaryAdapter
+    private var token = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,30 +56,39 @@ class AccountReportsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val list = ArrayList<ReportData>()
+        token = "Bearer ${preferenceManager.getToken()}"
 
         transactionSummaryAdapter = TransactionSummaryAdapter(requireContext())
         binding.transactionSummaryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.transactionSummaryRecyclerView.adapter = transactionSummaryAdapter
 
+        binding.loginUserName.text = "Welcome, ${preferenceManager.getUserData()?.ownerName}"
 
         val (startDate, endDate) = getStartAndEndDateOfCurrentMonth()
         binding.dataForDates.text = "Showing Data from $startDate to $endDate"
-        val body = FromToDateBody(startDate,endDate)
-        userViewModel.getReportsByDate(body,preferenceManager.getVendorId().toString())
+        val body = FromToDateBody(startDate, endDate)
+        userViewModel.getReportsByDate(token,body, preferenceManager.getVendorId().toString())
         userViewModel.getReports.observe(viewLifecycleOwner) {
             list.clear()
             lifecycleScope.launch {
                 binding.income.text = "+ ₹ ${it.data!!.sumPay.toString()}"
                 binding.expense.text = "- ₹ ${it.data!!.sumExpense.toString()}"
                 val totalGain = it.data!!.sumPay?.minus(it.data!!.sumExpense!!)
+                if (totalGain!! < 0) {
+                    binding.overallGain.setTextColor(resources.getColor(R.color.error_red))
+                } else {
+                    binding.overallGain.setTextColor(resources.getColor(R.color.green_pays))
+                }
                 binding.overallGain.text = "₹ ${totalGain.toString()}"
-
 
                 withContext(Dispatchers.Default) {
                     for (item in it.data!!.getPay) {
                         list.add(
                             ReportData(
-                                item.customerdata!!.customerName, item.createdAt.toString(), item.paidAmount.toString(), true
+                                item.customerdata!!.customerName,
+                                item.createdAt.toString(),
+                                item.paidAmount.toString(),
+                                true
                             )
                         )
                     }
@@ -87,7 +97,11 @@ class AccountReportsFragment : Fragment() {
                     for (item in it.data!!.getExpense) {
                         list.add(
                             ReportData(
-                                item.vendor!!.ownerName, item.createdAt.toString(), item.amount.toString(), false
+                                if (item.employee != null) {
+                                    item.employee!!.employeeName
+                                } else {
+                                    item.vendor!!.ownerName
+                                }, item.createdAt.toString(), item.amount.toString(), false
                             )
                         )
                     }
@@ -102,7 +116,7 @@ class AccountReportsFragment : Fragment() {
 
 
         binding.swipeToRefresh.setOnRefreshListener {
-            userViewModel.getReportsByDate(body,preferenceManager.getVendorId().toString())
+            userViewModel.getReportsByDate(token,body, preferenceManager.getVendorId().toString())
             binding.swipeToRefresh.isRefreshing = false
         }
 
@@ -128,16 +142,16 @@ class AccountReportsFragment : Fragment() {
         toDate.text = endDate
 
         fromDate.setOnClickListener {
-            AppUtils.showDatePickerDialog(context,fromDate)
+            AppUtils.showDatePickerDialog(context, fromDate)
         }
 
         toDate.setOnClickListener {
-            AppUtils.showDatePickerDialog(context,toDate)
+            AppUtils.showDatePickerDialog(context, toDate)
         }
 
         apply.setOnClickListener {
-            val body = FromToDateBody(fromDate.text.toString(),toDate.text.toString())
-            userViewModel.getReportsByDate(body,preferenceManager.getVendorId().toString())
+            val body = FromToDateBody(fromDate.text.toString(), toDate.text.toString())
+            userViewModel.getReportsByDate(token,body, preferenceManager.getVendorId().toString())
             binding.dataForDates.text = "Showing Data from $startDate to $endDate"
 
             bottomSheetDialog.dismiss()
@@ -147,6 +161,7 @@ class AccountReportsFragment : Fragment() {
         bottomSheetDialog.setContentView(view)
         bottomSheetDialog.show()
     }
+
     fun getStartAndEndDateOfCurrentMonth(): Pair<String, String> {
         // Create a calendar instance and set it to the current date
         val calendar = Calendar.getInstance()
@@ -160,7 +175,7 @@ class AccountReportsFragment : Fragment() {
         val lastDayOfMonth = calendar.time
 
         // Define the desired date format
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd",Locale.US)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
         // Format the dates
         val startDate = dateFormat.format(firstDayOfMonth)

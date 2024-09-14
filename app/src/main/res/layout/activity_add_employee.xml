@@ -59,7 +59,7 @@
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etName"
+                    android:id="@+id/employeeName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName" />
@@ -81,12 +81,33 @@
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etMobileNo"
+                    android:id="@+id/employeeMobileNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="phone"
                     android:maxLength="10" />
             </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="Alternate Mobile Number" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Alternate Mobile No"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/employeeAlternateMobileNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:maxLength="10" />
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
@@ -102,7 +123,7 @@
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etEmailId"
+                    android:id="@+id/employeeEmailId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress" />
@@ -116,16 +137,16 @@
                 android:text="Aadhar Number" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilAadharNo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Aadhar No"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etAadharNo"
+                    android:id="@+id/employeeAadharNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="12"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -231,7 +252,6 @@
                         android:text="PinCode" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/pinCodeDropdown"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -244,6 +264,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:inputType="number"
+                            android:minHeight="@dimen/_40sdp"
                             android:maxLength="6" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -326,12 +347,16 @@
 
             </LinearLayout>
 
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:text="Salary Type"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_height="wrap_content"/>
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dropdownLayout2"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/materialTextView"
                 app:placeholderText="Select">
@@ -347,7 +372,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:text="Salary Amount" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -355,6 +380,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/salaryAmount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
@@ -402,6 +428,7 @@
                         android:layout_height="wrap_content">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/accountNumber"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number" />
@@ -418,6 +445,7 @@
                         android:layout_height="wrap_content">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/ifscCode"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -433,6 +461,7 @@
                         android:layout_height="wrap_content">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/branchName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -444,6 +473,7 @@
                 android:id="@+id/saveEmployee"
                 android:layout_width="match_parent"
                 android:text="Save Employee"
+                android:layout_marginTop="@dimen/_10sdp"
                 style="@style/ButtonStyle"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

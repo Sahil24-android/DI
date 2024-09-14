@@ -9,10 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.ActivityEventBinding
 import com.event.eventmanagement.model.UserViewModel
@@ -29,13 +26,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener {
     private lateinit var binding: ActivityEventBinding
-    private val userViewModel:UserViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var adapter: CustomerEventAdapter
     private lateinit var exposedEventAdapter: CustomerExposedEventAdapter
     private lateinit var preferenceManager: PreferenceManager
     private var currentPosition = 0
     private var date: String? = null
     private var exposedListData: ArrayList<EventData> = ArrayList()
+    private var token: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -47,8 +45,10 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 //            insets
 //        }
 
+
         adapter = CustomerEventAdapter(this, this)
         preferenceManager = PreferenceManager(this)
+        token = "Bearer ${preferenceManager.getToken()}"
         binding.eventRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.eventRecyclerView.adapter = adapter
@@ -62,7 +62,6 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
         binding.exposedEventRecyclerView.adapter = exposedEventAdapter
 //        val snapHelper2 = PagerSnapHelper()
 //        snapHelper2.attachToRecyclerView(binding.eventRecyclerView)
-
 
 
         val regex = Regex("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
@@ -82,7 +81,7 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
             binding.exposedEventsTab.setTextColor(resources.getColor(R.color.white))
             binding.myEventTab.setBackgroundColor(resources.getColor(R.color.white))
             binding.myEventTab.setTextColor(resources.getColor(R.color.black))
-            userViewModel.eventExposedToMe(preferenceManager.getVendorId().toString())
+            userViewModel.eventExposedToMe(token!!,preferenceManager.getVendorId().toString())
         }
 
 
@@ -119,7 +118,7 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
         }
 
         binding.swipeToRefresh.setOnRefreshListener {
-            userViewModel.getAllEvents(preferenceManager.getVendorId().toString())
+            userViewModel.getAllEvents(token!!, preferenceManager.getVendorId().toString())
             binding.swipeToRefresh.isRefreshing = false
         }
 
@@ -167,6 +166,8 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
         val deleteEventTextView: MaterialTextView = view.findViewById(R.id.tvDeleteEvent)
         val exposeEvent: MaterialTextView = view.findViewById(R.id.exposeEvent)
 
+        editEventTextView.visibility = View.GONE
+        deleteEventTextView.visibility = View.GONE
         if (isExposed) {
             addPaymentTextView.visibility = View.GONE
             editEventTextView.visibility = View.GONE
@@ -226,19 +227,23 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 
     override fun onResume() {
         if (date.toString() == "showAll") {
-            userViewModel.getAllEvents(preferenceManager.getVendorId().toString())
+            userViewModel.getAllEvents(token!!, preferenceManager.getVendorId().toString())
             binding.fromPayments.visibility = View.GONE
         } else if (date.toString() == "payment") {
             binding.fromPayments.visibility = View.VISIBLE
             binding.tabLayout
                 .visibility = View.GONE
-            userViewModel.getAllEvents(preferenceManager.getVendorId().toString())
+            userViewModel.getAllEvents(token!!, preferenceManager.getVendorId().toString())
         } else if (date.toString().contains("From Customer")) {
             Log.d("date", date.toString())
             val customerId = date.toString().split(" ")[2]
-            userViewModel.getEventByCustomer(customerId)
+            userViewModel.getEventByCustomer(token!!,customerId)
         } else {
-            userViewModel.getEventByDate(date!!, preferenceManager.getVendorId().toString())
+            userViewModel.getEventByDate(
+                token!!,
+                date!!,
+                preferenceManager.getVendorId().toString()
+            )
             binding.fromPayments.visibility = View.GONE
         }
         super.onResume()

@@ -2,6 +2,7 @@ package com.event.eventmanagement.di
 
 import com.event.eventmanagement.apis.ApiServices
 import com.event.eventmanagement.apis.LocationService
+import com.event.eventmanagement.apis.RetrofitClient
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -36,7 +37,7 @@ object AppModule {
     @ApiServicesRetrofit
     fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://13.201.188.94:7000/api/")
+            .baseUrl(RetrofitClient.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

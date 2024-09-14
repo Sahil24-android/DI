@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,6 +41,7 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
     private lateinit var dashBoardEventAdapter: DashBoardEventAdapter
     private var exposedListData: ArrayList<EventData> = ArrayList()
     private val loader by lazy { CustomProgressDialog(requireContext()) }
+    private var token: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +51,7 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentDashBoardBinding.inflate(inflater, container, false)
         (activity as MainActivity).showToolbar()
         preferenceManager = PreferenceManager(requireContext())
@@ -67,7 +67,7 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
         binding.calendarView.setForwardButtonImage(resources.getDrawable(R.drawable.baseline_arrow_forward_ios_24))
         binding.calendarView.setPreviousButtonImage(resources.getDrawable(R.drawable.baseline_arrow_back_ios_new_24))
 
-
+        token = "Bearer ${preferenceManager.getToken()}"
         //  userViewModel.getAllEventDates()
         val events: MutableList<CalendarDay> = ArrayList()
         userViewModel.allEventsDates.observe(viewLifecycleOwner) { response ->
@@ -111,7 +111,7 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
             } else {
                 // Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
             }
-            userViewModel.getAllEvents(preferenceManager.getVendorId().toString())
+            userViewModel.getAllEvents(token,preferenceManager.getVendorId().toString())
         }
 
         dashBoardEventAdapter = DashBoardEventAdapter(requireContext())
@@ -184,7 +184,7 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
         }
 
         binding.swipeToRefresh.setOnRefreshListener {
-            userViewModel.getAllEventDates(preferenceManager.getVendorId().toString())
+            userViewModel.getAllEventDates(token,preferenceManager.getVendorId().toString())
             binding.swipeToRefresh.isRefreshing = false
         }
 
@@ -261,8 +261,8 @@ class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionRespons
 
     override fun onResume() {
         super.onResume()
-        userViewModel.getAllEventDates(preferenceManager.getVendorId().toString())
-        userViewModel.eventExposedToMe(preferenceManager.getVendorId().toString())
+        userViewModel.getAllEventDates(token,preferenceManager.getVendorId().toString())
+        userViewModel.eventExposedToMe(token,preferenceManager.getVendorId().toString())
 
     }
 

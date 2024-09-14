@@ -21,7 +21,9 @@ import com.event.eventmanagement.databinding.FragmentExpensesFrgmentBinding
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.customerEventList.data.ExpensePayment
+import com.event.eventmanagement.views.activity.employeeExpense.AddEmployeeExpense
 import com.event.eventmanagement.views.activity.vendorExpense.AddVendorExpense
+import com.event.eventmanagement.views.fragment.adapter.EmployeeExpensesAdapter
 import com.event.eventmanagement.views.fragment.adapter.VendorExpensesAdapter
 import com.event.eventmanagement.views.fragment.datasource.EventBody
 import com.event.eventmanagement.views.fragment.datasource.ExpenseData
@@ -37,6 +39,9 @@ class ExpensesFragment : Fragment() {
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var vendorExpensesAdapter: VendorExpensesAdapter
+    private lateinit var employeeExpensesAdapter: EmployeeExpensesAdapter
+    private var token = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -60,6 +65,8 @@ class ExpensesFragment : Fragment() {
 //            showCustomDialog()
 //        }
 
+        token = "Bearer ${preferenceManager.getToken()}"
+
         binding.toVendorTab.setOnClickListener {
             binding.toVendorLayout.visibility = View.VISIBLE
             binding.toEmployeesLayout.visibility = View.GONE
@@ -67,7 +74,7 @@ class ExpensesFragment : Fragment() {
             binding.toVendorTab.setTextColor(getResources().getColor(R.color.white))
             binding.toEmployeesTab.setBackgroundColor(resources.getColor(R.color.white))
             binding.toEmployeesTab.setTextColor(getResources().getColor(R.color.black))
-            userViewModel.getVendorExpenses(preferenceManager.getVendorId().toString(), "vendor")
+            userViewModel.getVendorExpenses(token,preferenceManager.getVendorId().toString(), "vendor")
         }
 
         binding.toEmployeesTab.setOnClickListener {
@@ -77,59 +84,60 @@ class ExpensesFragment : Fragment() {
             binding.toVendorTab.setTextColor(getResources().getColor(R.color.black))
             binding.toEmployeesTab.setBackgroundColor(resources.getColor(R.color.blueColorDark))
             binding.toEmployeesTab.setTextColor(getResources().getColor(R.color.white))
-
+            userViewModel.getEmployeeExpenses(token,preferenceManager.getVendorId().toString(), "emp")
         }
+
+        binding.back.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+
+
 
         binding.addVendorExpense.setOnClickListener {
             startActivity(Intent(requireContext(), AddVendorExpense::class.java))
         }
-        val vendorExpenses  = ArrayList<ExpensePayment>()
+        val vendorExpenses = ArrayList<ExpensePayment>()
         vendorExpensesAdapter = VendorExpensesAdapter()
         binding.vendorExpenseRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.vendorExpenseRecyclerView.adapter = vendorExpensesAdapter
 
 
-        userViewModel.getVendorExpense.observe(viewLifecycleOwner){result ->
+
+        userViewModel.getVendorExpense.observe(viewLifecycleOwner) { result ->
             vendorExpenses.clear()
-            if (result.data.isNotEmpty()){
+            if (result.data.isNotEmpty()) {
                 vendorExpensesAdapter.updateList(result.data)
-            }else{
+            } else {
                 Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
             }
         }
+
+        employeeExpensesAdapter = EmployeeExpensesAdapter()
+        binding.employeeExpenseRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.employeeExpenseRecyclerView.adapter = employeeExpensesAdapter
+
+
+        userViewModel.getEmployeeExpense.observe(viewLifecycleOwner) { result ->
+            vendorExpenses.clear()
+            if (result.data.isNotEmpty()) {
+                employeeExpensesAdapter.updateList(result.data)
+            } else {
+                Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.addExployeeExpense.setOnClickListener {
+            startActivity(Intent(requireContext(), AddEmployeeExpense::class.java))
+        }
+
+
     }
 
     override fun onResume() {
-        userViewModel.getVendorExpenses(preferenceManager.getVendorId().toString(), "vendor")
+        userViewModel.getVendorExpenses(token,preferenceManager.getVendorId().toString(), "vendor")
+        userViewModel.getEmployeeExpenses(token,preferenceManager.getVendorId().toString(), "emp")
 
         super.onResume()
-    }
-    private fun showCustomDialog(
-    ) {
-        val dialogView =
-            LayoutInflater.from(requireContext())
-                .inflate(R.layout.custome_expense_dialog, null)
-
-        val expenseName = dialogView.findViewById<TextInputEditText>(R.id.expenseName)
-        val expenseAmount = dialogView.findViewById<TextInputEditText>(R.id.expenseAmount)
-        val expenseDate = dialogView.findViewById<MaterialTextView>(R.id.dateAndTime)
-        val expenseToWhome = dialogView.findViewById<TextInputEditText>(R.id.expenseToWhome)
-        val save = dialogView.findViewById<MaterialButton>(R.id.save)
-        val cancel = dialogView.findViewById<MaterialButton>(R.id.cancel)
-
-        val dialog = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog)
-            .setView(dialogView)
-            .setTitle("Event Master")
-            .create()
-
-
-        save.setOnClickListener {
-
-        }
-        cancel.setOnClickListener {
-            dialog.dismiss()
-        }
-        dialog.show()
     }
 
     companion object {

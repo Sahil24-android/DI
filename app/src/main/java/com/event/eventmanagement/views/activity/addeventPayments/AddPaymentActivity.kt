@@ -9,9 +9,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.ActivityAddPaymentBinding
@@ -31,6 +29,7 @@ class AddPaymentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddPaymentBinding
     private val userViewModel:UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
+    private var token: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -48,7 +47,7 @@ class AddPaymentActivity : AppCompatActivity() {
         val eventData = intent.getParcelableExtra<EventData>("event")
         preferenceManager = PreferenceManager(this)
 
-
+        token = "Bearer ${preferenceManager.getToken()}"
         val adapter = PaymentsAdapter(this)
         binding.paymentRecycler.adapter = adapter
         binding.paymentRecycler.layoutManager = LinearLayoutManager(this)
@@ -70,7 +69,7 @@ class AddPaymentActivity : AppCompatActivity() {
             )
 
 
-            userViewModel.addPayment(paymentBody)
+            userViewModel.addPayment(token,paymentBody)
 
         }
 

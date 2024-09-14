@@ -11,11 +11,13 @@ import javax.net.ssl.X509TrustManager
 
 object RetrofitClient {
 
-    const val BASE_URL = "http://13.201.188.94:7000/api/"
+    const val BASE_URL = "http://backend.eventsgo.in/api/"
 
 //    http://13.201.188.94:7000/api/service
 
     private const val LOCATION_URL = "https://api.postalpincode.in/"
+    private const val BASE_URL2 = "https://api.phonepe.com/"
+//    private const val BASE_URL= "https://api-preprod.phonepe.com/apis/pg-sandbox"
     private var gson = GsonBuilder().setLenient().create()
 
     private val retrofit: Retrofit by lazy {
@@ -30,6 +32,15 @@ object RetrofitClient {
             .client(getUnsafeOkHttpClient().build())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
+    }
+
+    fun getPG_SDKInterface(): ApiServices {
+        val gson = GsonBuilder().setLenient().create()
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL2)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(ApiServices::class.java)
     }
 
     private fun getUnsafeOkHttpClient(): OkHttpClient.Builder {

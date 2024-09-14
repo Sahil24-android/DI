@@ -26,6 +26,7 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
     private val userViewModel:UserViewModel by viewModels()
     private val vendorList: ArrayList<Vendor> = ArrayList()
     private lateinit var preferenceManager: PreferenceManager
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -33,6 +34,8 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
         setContentView(binding.root)
 
         preferenceManager = PreferenceManager(this)
+
+        token = "Bearer ${preferenceManager.getToken()}"
 
         val eventData = intent.getParcelableExtra<EventData>("event")
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -42,7 +45,7 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
 //        }
 
         var sendToVendor = 0
-        userViewModel.getAllVendor()
+        userViewModel.getAllVendor(token)
 
         binding.lessAmount.text =
             getString(R.string.enter_amount_less_than, eventData?.finalAmount.toString())
@@ -68,7 +71,7 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().length == 10) {
-                    val listFilter = vendorList.filter { it.mobNo == s.toString() }
+                    val listFilter = vendorList.filter { it.mobNo == s.toString() && it.mobNo != preferenceManager.getUserData()?.mobNo }
                     if (listFilter.isNotEmpty()) {
                         binding.vendorDetailLayout.visibility = View.VISIBLE
 
@@ -90,9 +93,9 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
                         ).show()
                     }
                 } else {
-                    Toast.makeText(
-                        this@ExposingEventActivity, "Vendor Not Found", Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        this@ExposingEventActivity, "Vendor Not Found", Toast.LENGTH_SHORT
+//                    ).show()
                     // binding.vendorDetailLayout.visibility = View.GONE
                     binding.vendorName.text = null
                     binding.vendorAddress.text = null
@@ -160,7 +163,7 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
                     binding.exposeAmount.text.toString().toInt()
                 )
 
-                userViewModel.transferEvent(exposedBody)
+                userViewModel.transferEvent(token,exposedBody)
             }
         }
 

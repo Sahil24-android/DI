@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.event.eventmanagement.MainActivity
 import com.event.eventmanagement.R
@@ -28,11 +27,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class EventTypeMastersFragment : Fragment() {
     private lateinit var binding: FragmentEventTypeBinding
-    private val eventsMap: MutableMap<Int, List<String>> = mutableMapOf()
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var eventAdapter: EventAdapter
     private lateinit var preferenceManager: PreferenceManager
-    private var vendorId:String?=null
+    private var vendorId: String? = null
+    private var token:String?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +41,7 @@ class EventTypeMastersFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentEventTypeBinding.inflate(inflater, container, false)
         eventAdapter = EventAdapter(requireContext())
         preferenceManager = PreferenceManager(requireContext())
@@ -57,7 +56,9 @@ class EventTypeMastersFragment : Fragment() {
             showCustomDialog()
         }
 
+        token = "Bearer ${preferenceManager.getToken()}"
 
+        Log.d("token",token!!)
         binding.back.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
@@ -66,8 +67,9 @@ class EventTypeMastersFragment : Fragment() {
         binding.eventRecycler.adapter = eventAdapter
 
         vendorId = preferenceManager.getVendorId().toString()
-        userViewModel.getEvents(vendorId!!)
+        userViewModel.getEvents(token!!,vendorId!!)
 
+        Log.d("vendorId",vendorId!!)
         userViewModel.getAllEventsResponse.observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 val response = result
@@ -76,12 +78,11 @@ class EventTypeMastersFragment : Fragment() {
                 Log.d("ArrayList", list.toString())
             } else {
                 Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show()
-
             }
         }
 
         binding.swipeToRefresh.setOnRefreshListener {
-            userViewModel.getEvents(vendorId!!)
+            userViewModel.getEvents(token!!,vendorId!!)
             binding.swipeToRefresh.isRefreshing = false
         }
     }
@@ -109,33 +110,37 @@ class EventTypeMastersFragment : Fragment() {
 
 
         save.setOnClickListener {
-            val eventBody = EventBody(
-                vendorId = preferenceManager.getVendorId().toString(),
-                eventName = eventName.text.toString(),
-                description = eventDescription.text.toString()
-            )
-            userViewModel.addEvent(eventBody)
-            userViewModel.eventResponse.observe(viewLifecycleOwner) { result ->
-                if (result != null) {
-                    val response = result
-                    if (response.msg!!.contains("Event Added Successfully")) {
-                        dialog.dismiss()
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            userViewModel.getEvents(vendorId!!)
-                            binding.swipeToRefresh.isRefreshing = false
-                        }, 1500)
+            if (eventName.text.toString().isEmpty() || eventDescription.text.toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill all the fields", Toast.LENGTH_SHORT).show()
+            } else {
+                val eventBody = EventBody(
+                    vendorId = preferenceManager.getVendorId().toString(),
+                    eventName = eventName.text.toString(),
+                    description = eventDescription.text.toString()
+                )
+                userViewModel.addEvent(eventBody,token!!)
+                userViewModel.eventResponse.observe(viewLifecycleOwner) { result ->
+                    if (result != null) {
+                        val response = result
+                        if (response.msg!!.contains("Event Added Successfully")) {
+                            dialog.dismiss()
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                userViewModel.getEvents(token!!,vendorId!!)
+                                binding.swipeToRefresh.isRefreshing = false
+                            }, 1500)
+                        } else {
+                            Toast.makeText(requireContext(), response.msg, Toast.LENGTH_SHORT)
+                                .show()
+                            dialog.dismiss()
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                userViewModel.getEvents(token!!,vendorId!!)
+                                binding.swipeToRefresh.isRefreshing = false
+                            }, 1500)
+                        }
                     } else {
-                        Toast.makeText(requireContext(), response.msg, Toast.LENGTH_SHORT)
+                        Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT)
                             .show()
-                        dialog.dismiss()
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            userViewModel.getEvents(vendorId!!)
-                            binding.swipeToRefresh.isRefreshing = false
-                        }, 1500)
                     }
-                } else {
-                    Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT)
-                        .show()
                 }
             }
 

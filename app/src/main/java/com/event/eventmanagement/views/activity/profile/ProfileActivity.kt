@@ -2,12 +2,9 @@ package com.event.eventmanagement.views.activity.profile
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.event.eventmanagement.R
 import com.event.eventmanagement.apis.RetrofitClient
 import com.event.eventmanagement.databinding.ActivityProfileBinding
 import com.event.eventmanagement.model.UserViewModel
@@ -54,11 +51,33 @@ class ProfileActivity : AppCompatActivity() {
         binding.companyName.text = preferenceManager.getUserData()?.companyName
 
         binding.logout.setOnClickListener {
+            showLogoutConfirmationDialog()
+        }
+
+        binding.packageDetails.setOnClickListener {
+            startActivity(Intent(this,PackageDetailsActivity::class.java))
+        }
+
+
+    }
+
+    private fun showLogoutConfirmationDialog() {
+        val dialogBuilder = AlertDialog.Builder(this)
+
+        dialogBuilder.setTitle("Confirmation")
+        dialogBuilder.setMessage("Are you sure you want to logout?")
+
+        dialogBuilder.setPositiveButton("Logout") { _, _ ->
+            // Handle logout logic here
             preferenceManager.clearSession()
             startActivity(Intent(this, LoginActivity::class.java))
             finishAffinity()
         }
-
-
+        dialogBuilder.setNegativeButton("Cancel") { dialog, _ ->
+            // Dismiss the dialog
+            dialog.dismiss()
+        }
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
     }
 }

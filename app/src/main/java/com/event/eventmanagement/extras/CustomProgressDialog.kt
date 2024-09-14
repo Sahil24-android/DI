@@ -12,8 +12,8 @@ import com.event.eventmanagement.R
 
 class CustomProgressDialog(context: Context) : AlertDialog(context) {
 
-
         private lateinit var animationView: LottieAnimationView
+
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -26,6 +26,7 @@ class CustomProgressDialog(context: Context) : AlertDialog(context) {
             animationView.setAnimation(R.raw.loading_animation)
             animationView.playAnimation()
             animationView.loop(true)
+
         }
 
 }

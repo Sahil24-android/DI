@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.event.eventmanagement.R
@@ -41,7 +42,18 @@ class PaymentsAdapter(private val context: Context) : RecyclerView.Adapter<Payme
         holder.paymentAmount.text = current.paidAmount.toString()
 
         holder.downloadPdf.setOnClickListener {
-            startDownload(current.pdfUrl!!,current.pdfName!!)
+//            if (current.pdfUrl!!.isNotEmpty()) {
+//                startDownload(current.pdfUrl!!, current.pdfName!!)
+//            }else{
+//                Toast.makeText(context, "PDF URL is empty", Toast.LENGTH_SHORT).show()
+//            }
+            try {
+                startDownload(current.pdfUrl!!, current.pdfName!!)
+                Toast.makeText(context, "Check Downloads", Toast.LENGTH_SHORT).show()
+
+            }catch (e:Exception){
+                Toast.makeText(context, "Check Downloads", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -61,7 +73,6 @@ class PaymentsAdapter(private val context: Context) : RecyclerView.Adapter<Payme
         val sequence:MaterialTextView = itemView.findViewById(R.id.sequence)
         val paymentAmount:MaterialTextView = itemView.findViewById(R.id.paymentAmount)
         val downloadPdf:ImageView = itemView.findViewById(R.id.pdfDownload)
-
     }
 
     private fun createNotificationChannel() {

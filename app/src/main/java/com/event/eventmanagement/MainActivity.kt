@@ -1,43 +1,35 @@
 package com.event.eventmanagement
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.event.eventmanagement.apis.RetrofitClient
 import com.event.eventmanagement.databinding.ActivityMainBinding
+import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
-import com.event.eventmanagement.views.activity.addeventPayments.AddPaymentActivity
-import com.event.eventmanagement.views.activity.customerEventList.EventActivity
-import com.event.eventmanagement.views.activity.invoice.InvoiceActivity
 import com.event.eventmanagement.views.activity.profile.ProfileActivity
-import com.event.eventmanagement.views.auth.LoginActivity
 import com.event.eventmanagement.views.fragment.AccountReportsFragment
-import com.event.eventmanagement.views.fragment.CustomerFragment
 import com.event.eventmanagement.views.fragment.DashBoardFragment
-import com.event.eventmanagement.views.fragment.EmployeeFragment
-import com.event.eventmanagement.views.fragment.EventTypeMastersFragment
-import com.event.eventmanagement.views.fragment.ExpensesFragment
-import com.event.eventmanagement.views.fragment.PackageMasterFragment
-import com.google.android.material.button.MaterialButton
-import com.squareup.picasso.Picasso
+import com.event.eventmanagement.views.fragment.GalleryFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var preferenceManager: PreferenceManager
+    private val userViewModel: UserViewModel by viewModels()
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         setSupportActionBar(binding.toolbar)
         preferenceManager = PreferenceManager(this)
+        token = "Bearer ${preferenceManager.getToken()}"
 
 //        val toggle = ActionBarDrawerToggle(
 //            this, binding.drawerLayout,binding.toolbar,R.string.open_drawer,R.string.close_drawer
@@ -128,7 +120,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.gallery -> {
-                    Toast.makeText(this, "Launching Soon", Toast.LENGTH_SHORT).show()
+                    loadFragment(GalleryFragment())
+                    binding.title.text = "Gallery"
+//                    Toast.makeText(this, "Launching Soon", Toast.LENGTH_SHORT).show()
                     true
                 }
 
@@ -145,12 +139,10 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-
     }
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment)
-
             .commit()
         //binding.drawerLayout.closeDrawers()
     }
@@ -163,4 +155,11 @@ class MainActivity : AppCompatActivity() {
     fun showToolbar() {
         binding.appbar.visibility = View.VISIBLE
     }
+
+    override fun onResume() {
+        super.onResume()
+        userViewModel.getMyPackage(token,preferenceManager.getUserData()?.id!!.toString())
+    }
+
+
 }

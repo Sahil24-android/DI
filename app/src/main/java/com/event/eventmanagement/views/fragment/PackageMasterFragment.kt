@@ -26,6 +26,7 @@ class PackageMasterFragment : Fragment() {
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var eventPackageMasterAdapter: EventPackageMasterAdapter
     private var vendorId:String? = null
+    private var token: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +57,10 @@ class PackageMasterFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
+        token = "Bearer ${preferenceManager.getToken()}"
+
         vendorId = preferenceManager.getVendorId().toString()
-        userViewModel.getEventPackages(vendorId!!)
+        userViewModel.getEventPackages(token,vendorId!!)
         userViewModel.getEventPackages.observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 if (result.data.isNotEmpty()) {
@@ -72,7 +75,7 @@ class PackageMasterFragment : Fragment() {
         }
 
         binding.swipeToRefresh.setOnRefreshListener {
-            userViewModel.getEventPackages(vendorId!!)
+            userViewModel.getEventPackages(token,vendorId!!)
             binding.swipeToRefresh.isRefreshing = false
         }
         binding.addPackageMaster.setOnClickListener {
@@ -83,7 +86,7 @@ class PackageMasterFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        userViewModel.getEventPackages(vendorId!!)
+        userViewModel.getEventPackages(token,vendorId!!)
     }
 
     companion object {

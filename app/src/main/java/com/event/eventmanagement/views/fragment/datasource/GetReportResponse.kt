@@ -1,5 +1,6 @@
 package com.event.eventmanagement.views.fragment.datasource
 
+import com.event.eventmanagement.views.activity.addEmployee.EmployeeBody
 import com.event.eventmanagement.views.activity.customerEventList.data.CustomerData
 import com.event.eventmanagement.views.auth.datasource.Vendor
 import com.google.gson.annotations.SerializedName
@@ -34,7 +35,7 @@ data class GetExpense(
     @SerializedName("createdAt") var createdAt: String? = null,
     @SerializedName("updatedAt") var updatedAt: String? = null,
     @SerializedName("vendor") var vendor: Vendor? = Vendor(),
-    @SerializedName("employee") var employee: Employee? = Employee()
+    @SerializedName("employee") var employee: EmployeeBody? = EmployeeBody()
 )
 
 data class GetPay(
@@ -57,8 +58,3 @@ data class GetPay(
     @SerializedName("customerdata") var customerdata: CustomerData? = CustomerData()
 )
 
-
-data class Employee(
-    @SerializedName("nmae") var name: String? = null
-
-)

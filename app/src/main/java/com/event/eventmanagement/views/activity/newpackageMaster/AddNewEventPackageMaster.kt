@@ -26,17 +26,18 @@ class AddNewEventPackageMaster : AppCompatActivity() {
     private val checkedEventItem: ArrayList<String> = ArrayList()
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
-    private var vendorId:String?= null
+    private var vendorId: String? = null
+    private var token: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddNewEventPackageMasterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        preferenceManager  = PreferenceManager(this)
-
+        preferenceManager = PreferenceManager(this)
+        token = "Bearer ${preferenceManager.getToken()}"
         vendorId = preferenceManager.getVendorId().toString()
-
-        userViewModel.getEvents(vendorId!!)
+        userViewModel.getEvents(token!!,vendorId!!)
         val map: HashMap<String, Int> = HashMap()
         val listEvent = ArrayList<String>()
         userViewModel.getAllEventsResponse.observe(this) { result ->
@@ -59,29 +60,38 @@ class AddNewEventPackageMaster : AppCompatActivity() {
         }
 
         binding.savePackage.setOnClickListener {
-            val packageName = binding.packageName.text.toString()
-            val packageDescription = binding.packageDescription.text.toString()
-            val packageAmount = binding.packageAmount.text.toString()
             val builder = StringBuilder()
-            for (item in checkedEventItem) {
-                if (map.containsKey(item)) {
-                    val eventId = map[item]
-                    builder.append("$eventId#")
+            if (binding.packageName.text.toString().isEmpty() ||
+                binding.packageDescription.text.toString().isEmpty() ||
+                binding.packageAmount.text.toString().isEmpty() ||
+                checkedEventItem.isEmpty()
+            ) {
+                Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+            } else {
+                val packageName = binding.packageName.text.toString()
+                val packageDescription = binding.packageDescription.text.toString()
+                val packageAmount = binding.packageAmount.text.toString()
+                //  val builder = StringBuilder()
+                for (item in checkedEventItem) {
+                    if (map.containsKey(item)) {
+                        val eventId = map[item]
+                        builder.append("$eventId#")
+                    }
                 }
-            }
-            val packageBody = PackageBody(
-                packageName = packageName,
-                description = packageDescription,
-                amount = packageAmount.toInt(),
-                eventId = builder.substring(0, builder.length - 1).toString(),
-                vendorId = vendorId!!.toInt()
+                val packageBody = PackageBody(
+                    packageName = packageName,
+                    description = packageDescription,
+                    amount = packageAmount.toInt(),
+                    eventId = builder.substring(0, builder.length - 1).toString(),
+                    vendorId = vendorId!!.toInt()
 
-            )
-            userViewModel.createPackage(packageBody)
-            Log.d(
-                "save",
-                "$checkedEventItem $packageName $packageDescription $packageAmount $packageBody"
-            )
+                )
+                userViewModel.createPackage(token!!,packageBody)
+                Log.d(
+                    "save",
+                    "$checkedEventItem $packageName $packageDescription $packageAmount $packageBody"
+                )
+            }
         }
 
         userViewModel.packageResponse.observe(this) { result ->

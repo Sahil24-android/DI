@@ -39,6 +39,7 @@ class InvoiceActivity : AppCompatActivity() {
     private val userViewModel:UserViewModel by viewModels()
     private val progressDialog by lazy { AppUtils.showProgressDialog(this) }
     private var fileName :String? = null
+    private var token :String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInvoiceBinding.inflate(layoutInflater)
@@ -53,6 +54,7 @@ class InvoiceActivity : AppCompatActivity() {
 
         preferenceManager = PreferenceManager(this)
         val userData = preferenceManager.getUserData()
+        token = "Bearer ${preferenceManager.getToken()}"
         val paymentId = intent.getIntExtra("paymentId", 0)
         ownerName = userData?.ownerName
         val firstReceipt = intent.getBooleanExtra("firstReceipt", false)
@@ -61,8 +63,8 @@ class InvoiceActivity : AppCompatActivity() {
             binding.previousLayout.visibility = View.GONE
             val invoiceData = intent.getParcelableExtra<EventBodyRequest>("invoiceData")
             val eventPackageName = intent.getStringExtra("PackageName")
-
-            binding.invoiceNumber.text = 1.toString()
+            val invoiceNumber = intent.getIntExtra("invoiceNumber",0)
+            binding.invoiceNumber.text = invoiceNumber.toString()
             binding.invoiceDate.text = currentDate
             binding.companyNameFrom.text = userData?.companyName
 
@@ -107,7 +109,7 @@ class InvoiceActivity : AppCompatActivity() {
             } else {
                 binding.finalAmount.text = "Rs. ${eventData?.finalAmount}"
             }
-            binding.invoiceNumber.text = 1.toString()
+            binding.invoiceNumber.text = eventData.id.toString()
             binding.invoiceDate.text = currentDate
             //vendor details
             binding.companyName.text = userData?.companyName
@@ -337,7 +339,7 @@ class InvoiceActivity : AppCompatActivity() {
                 val pdfBody = PdfBody(
                     paymentId.toString(), downloadUrl,pdfFile.name
                 )
-                userViewModel.updatePdfUrl(pdfBody)
+                userViewModel.updatePdfUrl(token,pdfBody)
 
 
             }

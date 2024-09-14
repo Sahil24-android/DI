@@ -30,6 +30,7 @@ class AddVendorExpense : AppCompatActivity() {
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var binding: ActivityAddVendorExpenseBinding
     private val vendorList: ArrayList<Vendor> = ArrayList()
+    private lateinit var token: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +44,12 @@ class AddVendorExpense : AppCompatActivity() {
 //        }
 
         preferenceManager = PreferenceManager(this)
-
+        token = "Bearer ${preferenceManager.getToken()}"
 
         binding.back.setOnClickListener {
             finish()
         }
-        userViewModel.getAllVendor()
+        userViewModel.getAllVendor(token)
 
         userViewModel.vendorList.observe(this) { response ->
             vendorList.clear()
@@ -81,7 +82,7 @@ class AddVendorExpense : AppCompatActivity() {
                         binding.contactDetails.text = "${listFilter[0].mobNo}"
                         binding.companyName.text = listFilter[0].companyName
                         sendToVendor = listFilter[0].id!!
-                        userViewModel.getEventByVendorId(sendToVendor.toString())
+                        userViewModel.getEventByVendorId(token,sendToVendor.toString())
                     } else {
                         binding.vendorDetailLayout.visibility = View.GONE
                         binding.vendorName.text = null
@@ -215,7 +216,7 @@ class AddVendorExpense : AppCompatActivity() {
                             )
                         )
 
-                        userViewModel.addVendorExpense(vendorExpenseBody)
+                        userViewModel.addVendorExpense(token,vendorExpenseBody)
                     } else {
                         Toast.makeText(this, "Amount Exceeded", Toast.LENGTH_SHORT).show()
                     }
