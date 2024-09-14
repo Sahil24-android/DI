@@ -7,25 +7,29 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.ActivityAddPaymentBinding
 import com.event.eventmanagement.extras.AppUtils
 import com.event.eventmanagement.model.UserViewModel
+import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.customerEventList.adapter.PaymentsAdapter
 import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.activity.invoice.InvoiceActivity
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@AndroidEntryPoint
 class AddPaymentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddPaymentBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel:UserViewModel by viewModels()
+    private lateinit var preferenceManager: PreferenceManager
+    private var token: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -41,9 +45,9 @@ class AddPaymentActivity : AppCompatActivity() {
         val currentDate = sdf.format(Date())
 
         val eventData = intent.getParcelableExtra<EventData>("event")
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        preferenceManager = PreferenceManager(this)
 
-
+        token = "Bearer ${preferenceManager.getToken()}"
         val adapter = PaymentsAdapter(this)
         binding.paymentRecycler.adapter = adapter
         binding.paymentRecycler.layoutManager = LinearLayoutManager(this)
@@ -57,6 +61,7 @@ class AddPaymentActivity : AppCompatActivity() {
             val paymentDate = binding.paymentDate.text.toString()
             remainingAmount = eventData.remainingAmount?.minus(amount!!)
             val paymentBody = PaymentBody(
+                preferenceManager.getVendorId().toString(),
                 eventId,
                 amount,
                 remainingAmount,
@@ -64,7 +69,7 @@ class AddPaymentActivity : AppCompatActivity() {
             )
 
 
-            userViewModel.addPayment(paymentBody)
+            userViewModel.addPayment(token,paymentBody)
 
         }
 

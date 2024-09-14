@@ -7,19 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.event.eventmanagement.MainActivity
 import com.event.eventmanagement.views.auth.adapter.EventPackageMasterAdapter
 import com.event.eventmanagement.databinding.FragmentPackageMasterBinding
 import com.event.eventmanagement.model.UserViewModel
+import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.newpackageMaster.AddNewEventPackageMaster
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class PackageMasterFragment : Fragment() {
     private lateinit var binding: FragmentPackageMasterBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
+    private lateinit var preferenceManager: PreferenceManager
     private lateinit var eventPackageMasterAdapter: EventPackageMasterAdapter
+    private var vendorId:String? = null
+    private var token: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +40,9 @@ class PackageMasterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPackageMasterBinding.inflate(inflater, container, false)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         eventPackageMasterAdapter = EventPackageMasterAdapter()
-    //    (activity as MainActivity).hideToolbar()
+        preferenceManager = PreferenceManager(requireContext())
+        (activity as MainActivity).hideToolbar()
         return binding.root
     }
 
@@ -49,7 +56,11 @@ class PackageMasterFragment : Fragment() {
         binding.back.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
-        userViewModel.getEventPackages()
+
+        token = "Bearer ${preferenceManager.getToken()}"
+
+        vendorId = preferenceManager.getVendorId().toString()
+        userViewModel.getEventPackages(token,vendorId!!)
         userViewModel.getEventPackages.observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 if (result.data.isNotEmpty()) {
@@ -64,7 +75,7 @@ class PackageMasterFragment : Fragment() {
         }
 
         binding.swipeToRefresh.setOnRefreshListener {
-            userViewModel.getEventPackages()
+            userViewModel.getEventPackages(token,vendorId!!)
             binding.swipeToRefresh.isRefreshing = false
         }
         binding.addPackageMaster.setOnClickListener {
@@ -75,7 +86,7 @@ class PackageMasterFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        userViewModel.getEventPackages()
+        userViewModel.getEventPackages(token,vendorId!!)
     }
 
     companion object {

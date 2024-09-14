@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:padding="@dimen/_3sdp"
+    android:background="@drawable/full_box"
     android:gravity="center_vertical"
     android:weightSum="4">
 
@@ -12,20 +14,27 @@
         android:layout_weight="1.2"
         android:padding="@dimen/_5sdp"
         android:layout_height="wrap_content"/>
-
+    <View
+        android:layout_width="@dimen/_1sdp"
+        android:background="@color/black"
+        android:layout_height="match_parent"/>
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/paymentDate"
         android:layout_weight="0.8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/_5sdp" />
-
+    <View
+        android:layout_width="@dimen/_1sdp"
+        android:background="@color/black"
+        android:layout_height="match_parent"/>
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/paymentAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.8"
         android:padding="@dimen/_5sdp" />
+
     <ImageView
         android:id="@+id/pdfDownload"
         android:layout_width="match_parent"

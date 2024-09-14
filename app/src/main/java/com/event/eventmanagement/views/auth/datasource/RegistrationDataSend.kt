@@ -11,6 +11,6 @@ data class RegistrationDataSend(
     val state: String,
     val country: String,
     val serviceId:String,
-    val servicePackageId:String,
+    val regDate:String,
     val password:String
 )

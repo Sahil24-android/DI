@@ -7,28 +7,33 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
 import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.ActivityEventBinding
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.addeventPayments.AddPaymentActivity
 import com.event.eventmanagement.views.activity.customerEventList.adapter.CustomerEventAdapter
+import com.event.eventmanagement.views.activity.customerEventList.adapter.CustomerExposedEventAdapter
 import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.activity.exposed.ExposingEventActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textview.MaterialTextView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener {
     private lateinit var binding: ActivityEventBinding
-    private lateinit var viewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var adapter: CustomerEventAdapter
+    private lateinit var exposedEventAdapter: CustomerExposedEventAdapter
     private lateinit var preferenceManager: PreferenceManager
     private var currentPosition = 0
     private var date: String? = null
+    private var exposedListData: ArrayList<EventData> = ArrayList()
+    private var token: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -40,21 +45,27 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 //            insets
 //        }
 
-        viewModel = ViewModelProvider(this)[UserViewModel::class.java]
+
         adapter = CustomerEventAdapter(this, this)
         preferenceManager = PreferenceManager(this)
+        token = "Bearer ${preferenceManager.getToken()}"
         binding.eventRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.eventRecyclerView.adapter = adapter
-        val snapHelper = PagerSnapHelper()
-        snapHelper.attachToRecyclerView(binding.eventRecyclerView)
+//        val snapHelper = PagerSnapHelper()
+//        snapHelper.attachToRecyclerView(binding.eventRecyclerView)
+
+        exposedEventAdapter = CustomerExposedEventAdapter(this)
+        preferenceManager = PreferenceManager(this)
+        binding.exposedEventRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.exposedEventRecyclerView.adapter = exposedEventAdapter
+//        val snapHelper2 = PagerSnapHelper()
+//        snapHelper2.attachToRecyclerView(binding.eventRecyclerView)
 
 
-
-//
-//
-//
-        viewModel.getAllCustomerEvents.observe(this) {
+        val regex = Regex("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
+        userViewModel.getAllCustomerEvents.observe(this) {
             if (it.data.isNotEmpty()) {
                 adapter.updateList(it.data)
             } else {
@@ -62,8 +73,52 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
             }
         }
 
+        binding.exposedEventsTab.setOnClickListener {
+            binding.exposedLayout.visibility = View.VISIBLE
+            binding.eventLayout.visibility = View.GONE
+
+            binding.exposedEventsTab.setBackgroundColor(resources.getColor(R.color.blueColorDark))
+            binding.exposedEventsTab.setTextColor(resources.getColor(R.color.white))
+            binding.myEventTab.setBackgroundColor(resources.getColor(R.color.white))
+            binding.myEventTab.setTextColor(resources.getColor(R.color.black))
+            userViewModel.eventExposedToMe(token!!,preferenceManager.getVendorId().toString())
+        }
+
+
+
+        userViewModel.eventExposedToMe.observe(this) {
+            exposedListData.clear()
+            if (it.data.isNotEmpty()) {
+                if (date!!.matches(regex)) {
+                    for (data in it.data) {
+                        for (item in data.eventDates) {
+                            if (item.fromDate.equals(date)) {
+                                exposedListData.add(data)
+                            }
+                        }
+                    }
+                    exposedEventAdapter.updateList(exposedListData)
+                } else {
+                    exposedEventAdapter.updateList(it.data)
+                }
+            } else {
+                Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
+        binding.myEventTab.setOnClickListener {
+            binding.exposedLayout.visibility = View.GONE
+            binding.eventLayout.visibility = View.VISIBLE
+            binding.myEventTab.setBackgroundColor(resources.getColor(R.color.blueColorDark))
+            binding.myEventTab.setTextColor(resources.getColor(R.color.white))
+            binding.exposedEventsTab.setBackgroundColor(resources.getColor(R.color.white))
+            binding.exposedEventsTab.setTextColor(resources.getColor(R.color.black))
+        }
+
         binding.swipeToRefresh.setOnRefreshListener {
-            viewModel.getAllEvents(preferenceManager.getVendorId().toString())
+            userViewModel.getAllEvents(token!!, preferenceManager.getVendorId().toString())
             binding.swipeToRefresh.isRefreshing = false
         }
 
@@ -73,10 +128,13 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 
         date = intent.getStringExtra("date")
 //        viewModel.getEventByDate(date!!)
-        viewModel.getEventByDate.observe(this) {
+
+        userViewModel.getEventByDate.observe(this) {
             if (it.data.isNotEmpty()) {
                 adapter.updateList(it.data)
+                binding.eventLayout.visibility = View.VISIBLE
             } else {
+                binding.eventLayout.visibility = View.GONE
                 Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show()
             }
         }
@@ -98,7 +156,7 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 //        Log.d("date", "onCreate: $date")
     }
 
-    fun showBottomSheet(context: Context, name: String, event: EventData,isExposed:Boolean) {
+    fun showBottomSheet(context: Context, name: String, event: EventData, isExposed: Boolean) {
         val bottomSheetDialog = BottomSheetDialog(context)
         val view = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_layout, null)
 
@@ -106,14 +164,16 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
         val addPaymentTextView: MaterialTextView = view.findViewById(R.id.tvAddPayment)
         val editEventTextView: MaterialTextView = view.findViewById(R.id.tvEditEvent)
         val deleteEventTextView: MaterialTextView = view.findViewById(R.id.tvDeleteEvent)
-        val exposeEvent :MaterialTextView = view.findViewById(R.id.exposeEvent)
+        val exposeEvent: MaterialTextView = view.findViewById(R.id.exposeEvent)
 
-        if (isExposed){
+        editEventTextView.visibility = View.GONE
+        deleteEventTextView.visibility = View.GONE
+        if (isExposed) {
             addPaymentTextView.visibility = View.GONE
             editEventTextView.visibility = View.GONE
             deleteEventTextView.visibility = View.GONE
             exposeEvent.visibility = View.VISIBLE
-        }else{
+        } else {
             addPaymentTextView.visibility = View.VISIBLE
             editEventTextView.visibility = View.VISIBLE
             deleteEventTextView.visibility = View.VISIBLE
@@ -167,28 +227,33 @@ class EventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener 
 
     override fun onResume() {
         if (date.toString() == "showAll") {
-            viewModel.getAllEvents(preferenceManager.getVendorId().toString())
+            userViewModel.getAllEvents(token!!, preferenceManager.getVendorId().toString())
             binding.fromPayments.visibility = View.GONE
         } else if (date.toString() == "payment") {
             binding.fromPayments.visibility = View.VISIBLE
-            viewModel.getAllEvents(preferenceManager.getVendorId().toString())
+            binding.tabLayout
+                .visibility = View.GONE
+            userViewModel.getAllEvents(token!!, preferenceManager.getVendorId().toString())
         } else if (date.toString().contains("From Customer")) {
-            Log.d("date",date.toString())
+            Log.d("date", date.toString())
             val customerId = date.toString().split(" ")[2]
-            viewModel.getEventByCustomer(customerId)
-        }else{
-            viewModel.getEventByDate(date!!,preferenceManager.getVendorId().toString())
+            userViewModel.getEventByCustomer(token!!,customerId)
+        } else {
+            userViewModel.getEventByDate(
+                token!!,
+                date!!,
+                preferenceManager.getVendorId().toString()
+            )
             binding.fromPayments.visibility = View.GONE
         }
         super.onResume()
     }
 
     override fun actionItemClick(position: Int, item: EventData) {
-
-        showBottomSheet(this, item.customerdata[0].customerName!!, item,false)
+        showBottomSheet(this, item.customerdata[0].customerName!!, item, false)
     }
 
     override fun exposeEvent(position: Int, item: EventData) {
-        showBottomSheet(this, item.customerdata[0].customerName!!, item,true)
+        showBottomSheet(this, item.customerdata[0].customerName!!, item, true)
     }
 }

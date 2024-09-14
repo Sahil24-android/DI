@@ -9,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +18,7 @@ import com.event.eventmanagement.R
 import com.event.eventmanagement.databinding.ActivityAddNewEventBinding
 import com.event.eventmanagement.extras.AppUtils
 import com.event.eventmanagement.extras.CustomProgressDialog
+import com.event.eventmanagement.model.LocationViewModel
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.createCustomerEvent.adapter.CustomDateEventAdapter
@@ -27,26 +28,32 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddNewEventActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddNewEventBinding
     private lateinit var customDateEventAdapter: CustomDateEventAdapter
-    private lateinit var userViewModel: UserViewModel
+    private  val userViewModel: UserViewModel by viewModels()
+    private val locationViewModel: LocationViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
+    private var vendorId:String? = null
     private val customDateEventList: ArrayList<EventDates> = ArrayList()
     private val packageList: ArrayList<EventPackageResponse> = ArrayList()
     private val dialog by lazy { CustomProgressDialog(this) }
+    private var token: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddNewEventBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         preferenceManager = PreferenceManager(this)
-
-
+        vendorId = preferenceManager.getVendorId().toString()
         binding.customDatesRadio.isChecked = true
         binding.customDateLayout.visibility = View.VISIBLE
+
+
+        token = "Bearer ${preferenceManager.getToken()}"
 
 //        binding.customDatesRadio.isChecked = true
 //        binding.customDateLayout.visibility = View.VISIBLE
@@ -62,7 +69,15 @@ class AddNewEventActivity : AppCompatActivity() {
 
         }
 
-        userViewModel.getEventPackages()
+        locationViewModel.isLoading.observe(this){
+            if (it) {
+                dialog.show()
+            } else {
+                dialog.dismiss()
+            }
+        }
+
+        userViewModel.getEventPackages(token!!,vendorId!!)
         userViewModel.getEventPackages.observe(this) { result ->
             packageList.clear()
             if (result != null) {
@@ -148,7 +163,7 @@ class AddNewEventActivity : AppCompatActivity() {
 
                 override fun afterTextChanged(s: Editable?) {
                     if (s.toString().length == 6) {
-                        userViewModel.getLocationsData(s.toString())
+                        locationViewModel.getLocationsData(s.toString())
                     } else {
                         binding.state.text = null
                         binding.city.text = null
@@ -158,7 +173,7 @@ class AddNewEventActivity : AppCompatActivity() {
 
             })
 
-        userViewModel.locationData.observe(this) { result ->
+        locationViewModel.locationData.observe(this) { result ->
             if (result != null) {
                 val getFirstData = result.get(0)
                 if (getFirstData.PostOffice.isNotEmpty()) {
@@ -343,7 +358,7 @@ class AddNewEventActivity : AppCompatActivity() {
                         .toInt(),
                     remainingAmount = binding.remaining.text.toString().replace("Rs. ", "").toInt(),
                 )
-                userViewModel.addNewEvent(bodyRequest!!)
+                userViewModel.addNewEvent(token!!,bodyRequest!!)
             }
         }
 
@@ -353,6 +368,7 @@ class AddNewEventActivity : AppCompatActivity() {
                 val intent = Intent(this, InvoiceActivity::class.java)
                 intent.putExtra("firstReceipt", true)
                 intent.putExtra("invoiceData", bodyRequest)
+                intent.putExtra("invoiceNumber",result.data!!.eventdata!!.id);
                 intent.putExtra("PackageName", binding.selectServiceType.text.toString())
                 startActivity(intent)
                 finish()
@@ -392,16 +408,23 @@ class AddNewEventActivity : AppCompatActivity() {
             AppUtils.showTimePicker(this, toTime)
         }
         save.setOnClickListener {
-            val customEventDates = EventDates(
-                date.text.toString(),
-                date.text.toString(),
-                fromTime.text.toString(),
-                toTime.text.toString(),
-                remark.text.toString()
-            )
-            customDateEventList.add(customEventDates)
-            customDateEventAdapter.updateList(customDateEventList)
-            dialog.dismiss()
+            if (date.text.toString().isNotEmpty() ||
+                fromTime.text.toString().isNotEmpty() ||
+                toTime.text.toString().isNotEmpty() ||
+                remark.text.toString().isNotEmpty()) {
+                val customEventDates = EventDates(
+                    date.text.toString(),
+                    date.text.toString(),
+                    fromTime.text.toString(),
+                    toTime.text.toString(),
+                    remark.text.toString()
+                )
+                customDateEventList.add(customEventDates)
+                customDateEventAdapter.updateList(customDateEventList)
+                dialog.dismiss()
+            }else{
+                Toast.makeText(this,"Please fill all fields",Toast.LENGTH_SHORT).show()
+            }
         }
         cancel.setOnClickListener {
             dialog.dismiss()

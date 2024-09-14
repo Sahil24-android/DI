@@ -18,6 +18,7 @@ data class EventDates(
     @SerializedName("is_active") var isActive: Int? = null,
     @SerializedName("is_delete") var isDelete: Int? = null,
     @SerializedName("createdAt") var createdAt: String? = null,
-    @SerializedName("updatedAt") var updatedAt: String? = null
+    @SerializedName("updatedAt") var updatedAt: String? = null,
+    @SerializedName("transfer") var transfer:Int? = null
 
 )

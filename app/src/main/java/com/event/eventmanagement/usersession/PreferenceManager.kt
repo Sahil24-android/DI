@@ -57,7 +57,6 @@ class PreferenceManager(context: Context) {
         return sharedPreferences.getString(TOKEN,"")
     }
 
-
     fun clearSession() {
         val editor = sharedPreferences.edit()
         editor.clear()
@@ -81,4 +80,16 @@ class PreferenceManager(context: Context) {
     fun isLoggedIn(): Boolean {
         return sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false)
     }
+
+    fun setRemainingDays(days:Long){
+        val editor = sharedPreferences.edit()
+        editor.putLong("remainingDays", days)
+        editor.apply()
+    }
+
+    fun getRemainingDays():Long{
+        return sharedPreferences.getLong("remainingDays",0L)
+    }
+
+
 }

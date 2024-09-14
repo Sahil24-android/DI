@@ -84,13 +84,12 @@ class ExposedEventAdapter(private val context: Context):RecyclerView.Adapter<Exp
         } else {
             holder.binding.eventItem.visibility = View.VISIBLE
         }
-
         holder.binding.advanceAmount.text = "₹${current.advanceAmount}"
 
-        val adapter = PaymentsAdapter(context)
+        val adapter = ExposedPaymentAdapter(context)
         holder.binding.paymentRecycler.adapter = adapter
         holder.binding.paymentRecycler.layoutManager = LinearLayoutManager(holder.itemView.context)
-        adapter.updateList(current.eventPayment)
+        adapter.updateList(current.expensePayment)
         holder.binding.paymentRecycler.setHasFixedSize(true)
 
 
@@ -100,7 +99,9 @@ class ExposedEventAdapter(private val context: Context):RecyclerView.Adapter<Exp
         holder.binding.companyName.text = current.exposedTo!!.companyName
         holder.binding.contactDetails.text = current.exposedTo!!.mobNo
         holder.binding.vendorAddress.text = current.exposedTo!!.address
+        holder.binding.exposingAmount.text = "₹${current.transferEvent!!.exposingAmount}"
 
+        holder.binding.hideFromExposing.visibility = View.GONE
     }
 
     override fun getItemCount(): Int {

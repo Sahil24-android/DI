@@ -6,7 +6,9 @@ data class PackageBody(
     @SerializedName("description"  ) var description : String? = null,
     @SerializedName("package_name" ) var packageName : String? = null,
     @SerializedName("event_id"     ) var eventId     : String? = null,
-    @SerializedName("amount"       ) var amount      : Int?    = null
+    @SerializedName("amount"       ) var amount      : Int?    = null,
+    @SerializedName("vendor_id") var vendorId: Int? = null,
+
 )
 
 data class PackageResponse(

@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,12 +18,15 @@ import com.event.eventmanagement.views.activity.customerEventList.adapter.Custom
 import com.event.eventmanagement.views.activity.customerEventList.data.EventData
 import com.event.eventmanagement.views.activity.exposed.data.ExposedBody
 import com.event.eventmanagement.views.auth.datasource.Vendor
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickListener {
     private lateinit var binding: ActivityExposingEventBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel:UserViewModel by viewModels()
     private val vendorList: ArrayList<Vendor> = ArrayList()
     private lateinit var preferenceManager: PreferenceManager
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -31,7 +35,8 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
 
         preferenceManager = PreferenceManager(this)
 
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        token = "Bearer ${preferenceManager.getToken()}"
+
         val eventData = intent.getParcelableExtra<EventData>("event")
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
 //            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -40,7 +45,7 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
 //        }
 
         var sendToVendor = 0
-        userViewModel.getAllVendor()
+        userViewModel.getAllVendor(token)
 
         binding.lessAmount.text =
             getString(R.string.enter_amount_less_than, eventData?.finalAmount.toString())
@@ -66,41 +71,36 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().length == 10) {
-                    for (item in vendorList) {
-                        if (item.mobNo == s.toString()) {
-                            Toast.makeText(
-                                this@ExposingEventActivity,
-                                "Vendor Found",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            binding.vendorDetailLayout.visibility = View.VISIBLE
+                    val listFilter = vendorList.filter { it.mobNo == s.toString() && it.mobNo != preferenceManager.getUserData()?.mobNo }
+                    if (listFilter.isNotEmpty()) {
+                        binding.vendorDetailLayout.visibility = View.VISIBLE
 
-                            binding.vendorName.text = item.ownerName
-                            binding.vendorAddress.text = item.address
-                            binding.contactDetails.text = "${item.mobNo}"
-                            binding.companyName.text = item.companyName
+                        binding.vendorName.text = listFilter[0].ownerName
+                        binding.vendorAddress.text = listFilter[0].address
+                        binding.contactDetails.text = "${listFilter[0].mobNo}"
+                        binding.companyName.text = listFilter[0].companyName
 
-                            sendToVendor = item.id!!
-                        } else {
-                            Toast.makeText(
-                                this@ExposingEventActivity,
-                                "Vendor Not Found",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            binding.vendorDetailLayout.visibility = View.GONE
-                            binding.vendorName.text = null
-                            binding.vendorAddress.text = null
-                            binding.contactDetails.text = null
-                            binding.companyName.text = null
-                        }
+                        sendToVendor = listFilter[0].id!!
+                    } else {
+                        binding.vendorDetailLayout.visibility = View.GONE
+                        binding.vendorName.text = null
+                        binding.vendorAddress.text = null
+                        binding.contactDetails.text = null
+                        binding.companyName.text = null
+                        sendToVendor = 0
+                        Toast.makeText(
+                            this@ExposingEventActivity, "Vendor Not Found", Toast.LENGTH_SHORT
+                        ).show()
                     }
                 } else {
-                    binding.vendorDetailLayout.visibility = View.GONE
-                    Toast.makeText(
-                        this@ExposingEventActivity,
-                        "Incorrect Number",
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        this@ExposingEventActivity, "Vendor Not Found", Toast.LENGTH_SHORT
+//                    ).show()
+                    // binding.vendorDetailLayout.visibility = View.GONE
+                    binding.vendorName.text = null
+                    binding.vendorAddress.text = null
+                    binding.contactDetails.text = null
+                    binding.companyName.text = null
                 }
             }
 
@@ -115,7 +115,7 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
         binding.eventDateRecycler.layoutManager = LinearLayoutManager(this)
         val adapter = CustomerDateEventAdapter(eventData.eventDates)
         binding.eventDateRecycler.adapter = adapter
-        
+
 
 
         binding.exposeAmount.addTextChangedListener(object : TextWatcher {
@@ -146,23 +146,33 @@ class ExposingEventActivity : AppCompatActivity(), CustomerEventAdapter.OnClickL
 
 
         binding.exposeEventButton.setOnClickListener {
-            val exposedBody = ExposedBody(
-                eventData.id,
-                preferenceManager.getVendorId(),
-                sendToVendor,
-                eventData.finalAmount,
-                binding.exposeAmount.text.toString().toInt()
-            )
+            if (sendToVendor == 0) {
+                Toast.makeText(this, "Select Vendor", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            } else if (binding.actualPrice.text.toString().replace("\u20b9 ", "")
+                    .toInt() < binding.exposeAmount.text.toString().toInt()
+            ) {
+                Toast.makeText(this, "Amount Exceed", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            } else {
+                val exposedBody = ExposedBody(
+                    eventData.id,
+                    preferenceManager.getVendorId(),
+                    sendToVendor,
+                    eventData.finalAmount,
+                    binding.exposeAmount.text.toString().toInt()
+                )
 
-            userViewModel.transferEvent(exposedBody)
+                userViewModel.transferEvent(token,exposedBody)
+            }
         }
 
 
-        userViewModel.eventTransferResponse.observe(this){response ->
-            if (response.Transfer != null){
+        userViewModel.eventTransferResponse.observe(this) { response ->
+            if (response.Transfer != null) {
                 finish()
-            }else{
-                Toast.makeText(this,"Enable To Procees",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Enable To Procees", Toast.LENGTH_SHORT).show()
             }
         }
     }

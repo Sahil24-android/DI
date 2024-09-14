@@ -2,7 +2,6 @@ package com.event.eventmanagement.views.activity.createCustomerEvent
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -27,7 +26,7 @@ data class EventBodyRequest(
     @SerializedName("remaining_amount") var remainingAmount: Int? = null,
     @SerializedName("event_address") var eventAddress: String? = null,
     @SerializedName("event_dates") var eventDates: ArrayList<EventDates> = arrayListOf()
-): Parcelable
+) : Parcelable
 
 @Parcelize
 data class EventDates(
@@ -37,10 +36,34 @@ data class EventDates(
     @SerializedName("to_time") var toTime: String? = null,
     @SerializedName("remark") var remark: String? = null
 
-):Parcelable
+) : Parcelable
 
 data class NewEventResponse(
     @SerializedName("msg") var msg: String? = null,
-)
+    @SerializedName("data") var data: AddEventData? = AddEventData()
+
+) {
+    data class AddEventData(
+        @SerializedName("eventdata") var eventdata: EventData? = EventData(),
+    ) {
+
+        data class EventData(
+            @SerializedName("id") var id: Int? = null,
+            @SerializedName("vendor_id") var vendorId: String? = null,
+            @SerializedName("event_pkg_id") var eventPkgId: Int? = null,
+            @SerializedName("customer_id") var customerId: Int? = null,
+            @SerializedName("description") var description: String? = null,
+            @SerializedName("amount") var amount: Int? = null,
+            @SerializedName("discount") var discount: Int? = null,
+            @SerializedName("final_amount") var finalAmount: Int? = null,
+            @SerializedName("advance_amount") var advanceAmount: Int? = null,
+            @SerializedName("remaining_amount") var remainingAmount: Int? = null,
+            @SerializedName("event_address") var eventAddress: String? = null,
+            @SerializedName("updatedAt") var updatedAt: String? = null,
+            @SerializedName("createdAt") var createdAt: String? = null
+
+        )
+    }
+}
 
 

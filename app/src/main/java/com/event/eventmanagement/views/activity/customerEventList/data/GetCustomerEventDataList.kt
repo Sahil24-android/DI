@@ -28,13 +28,15 @@ data class EventData(
     @SerializedName("is_delete") var isDelete: Int? = null,
     @SerializedName("createdAt") var createdAt: String? = null,
     @SerializedName("updatedAt") var updatedAt: String? = null,
+    @SerializedName("transfer") var isTransfer: Int? = null,
     @SerializedName("customerdata") var customerdata: ArrayList<CustomerData> = arrayListOf(),
     @SerializedName("event_dates") var eventDates: ArrayList<CustomerEventDates> = arrayListOf(),
     @SerializedName("event_pkg") var eventPkg: ArrayList<EventPkg> = arrayListOf(),
     @SerializedName("event_payment") var eventPayment: ArrayList<EventPayment> = arrayListOf(),
     @SerializedName("exposed_from") var exposedFrom: ExposedFrom? = ExposedFrom(),
     @SerializedName("exposed_to") var exposedTo: ExposedTo? = ExposedTo(),
-    @SerializedName("transfer_event") var transferEvent: TransferEvent? = TransferEvent()
+    @SerializedName("transfer_event") var transferEvent: TransferEvent? = TransferEvent(),
+    @SerializedName("expense_payment"  ) var expensePayment  : ArrayList<ExpensePayment> = arrayListOf()
 ) : Parcelable
 
 @Parcelize
@@ -50,6 +52,26 @@ data class EventPkg(
     @SerializedName("updatedAt") var updatedAt: String? = null
 
 ) : Parcelable
+
+@Parcelize
+data class ExpensePayment (
+
+    @SerializedName("id"                ) var id              : Int?    = null,
+    @SerializedName("vendor_id"         ) var vendorId        : Int?    = null,
+    @SerializedName("expense_name"      ) var expenseName     : String? = null,
+    @SerializedName("description"       ) var description     : String? = null,
+    @SerializedName("expense_to_whom"   ) var expenseToWhom   : String? = null,
+    @SerializedName("expense_to_vendor" ) var expenseToVendor : Int?    = null,
+    @SerializedName("event_manage_id"   ) var eventManageId   : Int?    = null,
+    @SerializedName("employee_id"       ) var employeeId      : Int?    = null,
+    @SerializedName("remaining_amount"  ) var remainingAmount : Int?    = null,
+    @SerializedName("amount"            ) var amount          : Int?    = null,
+    @SerializedName("is_active"         ) var isActive        : Int?    = null,
+    @SerializedName("is_delete"         ) var isDelete        : Int?    = null,
+    @SerializedName("createdAt"         ) var createdAt       : String? = null,
+    @SerializedName("updatedAt"         ) var updatedAt       : String? = null
+
+):Parcelable
 
 @Parcelize
 data class CustomerData(

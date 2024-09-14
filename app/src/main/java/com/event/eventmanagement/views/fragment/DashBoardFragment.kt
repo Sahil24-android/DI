@@ -7,39 +7,41 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CalendarView
-import android.widget.CalendarView.OnDateChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.CalendarDay
 import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener
 import com.event.eventmanagement.MainActivity
 import com.event.eventmanagement.R
-import com.event.eventmanagement.databinding.ActivityMainBinding
 import com.event.eventmanagement.databinding.FragmentDashBoardBinding
-import com.event.eventmanagement.extras.AppUtils
 import com.event.eventmanagement.extras.CustomProgressDialog
 import com.event.eventmanagement.model.UserViewModel
 import com.event.eventmanagement.usersession.PreferenceManager
 import com.event.eventmanagement.views.activity.createCustomerEvent.AddNewEventActivity
 import com.event.eventmanagement.views.activity.customerEventList.EventActivity
-import com.google.android.material.datepicker.DayViewDecorator
-import com.sabpaisa.gateway.android.sdk.SabPaisaGateway
+import com.event.eventmanagement.views.activity.customerEventList.data.EventData
+import com.event.eventmanagement.views.fragment.adapter.DashBoardEventAdapter
 import com.sabpaisa.gateway.android.sdk.interfaces.IPaymentSuccessCallBack
 import com.sabpaisa.gateway.android.sdk.models.TransactionResponsesModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-
-class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponsesModel> {
+@AndroidEntryPoint
+class DashBoardFragment : Fragment(), IPaymentSuccessCallBack<TransactionResponsesModel> {
 
     private lateinit var binding: FragmentDashBoardBinding
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var preferenceManager: PreferenceManager
+    private lateinit var dashBoardEventAdapter: DashBoardEventAdapter
+    private var exposedListData: ArrayList<EventData> = ArrayList()
     private val loader by lazy { CustomProgressDialog(requireContext()) }
+    private var token: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +51,8 @@ class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponse
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentDashBoardBinding.inflate(inflater, container, false)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         (activity as MainActivity).showToolbar()
         preferenceManager = PreferenceManager(requireContext())
 
@@ -66,16 +67,13 @@ class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponse
         binding.calendarView.setForwardButtonImage(resources.getDrawable(R.drawable.baseline_arrow_forward_ios_24))
         binding.calendarView.setPreviousButtonImage(resources.getDrawable(R.drawable.baseline_arrow_back_ios_new_24))
 
-
-
-
-
-      //  userViewModel.getAllEventDates()
+        token = "Bearer ${preferenceManager.getToken()}"
+        //  userViewModel.getAllEventDates()
         val events: MutableList<CalendarDay> = ArrayList()
         userViewModel.allEventsDates.observe(viewLifecycleOwner) { response ->
             if (response != null) {
                 if (response.data.isNotEmpty()) {
-                  //  val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    //  val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                     for (item in response.data) {
                         Log.d("item", item.toString())
                         val day = item.fromDate!!.split("-")
@@ -94,21 +92,50 @@ class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponse
                 }
             }
         }
-        userViewModel.isLoading.observe(viewLifecycleOwner){
-            if (it){
+
+        userViewModel.isLoading.observe(viewLifecycleOwner) {
+            if (it) {
                 loader.show()
-            }else{
+            } else {
                 loader.dismiss()
             }
         }
 
 
-        binding.eventMaster.setOnClickListener {
-            loadFragment(EventTypeMastersFragment())
+//        userViewModel.eventExposedToMe(preferenceManager.getVendorId().toString())
+
+        userViewModel.eventExposedToMe.observe(viewLifecycleOwner) {
+            exposedListData.clear()
+            if (it.data.isNotEmpty()) {
+                exposedListData.addAll(it.data)
+            } else {
+                // Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
+            }
+            userViewModel.getAllEvents(token,preferenceManager.getVendorId().toString())
         }
 
-        binding.customers.setOnClickListener{
+        dashBoardEventAdapter = DashBoardEventAdapter(requireContext())
+        binding.eventListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.eventListRecyclerView.adapter = dashBoardEventAdapter
+
+
+        userViewModel.getAllCustomerEvents.observe(viewLifecycleOwner) {
+            if (it.data.isNotEmpty()) {
+                exposedListData.addAll(it.data)
+                dashBoardEventAdapter.updateList(exposedListData)
+            } else {
+                dashBoardEventAdapter.updateList(exposedListData)
+//                Toast.makeText(requireContext(), "No Data Found", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+        binding.customers.setOnClickListener {
             loadFragment(CustomerFragment())
+        }
+
+        binding.employee.setOnClickListener {
+            loadFragment(EmployeeFragment())
         }
 
 //        binding.gallery.setOnClickListener {
@@ -142,13 +169,22 @@ class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponse
 
         binding.payments.setOnClickListener {
             val intent = Intent(requireContext(), EventActivity::class.java)
-            intent.putExtra("date","payment")
+            intent.putExtra("date", "payment")
             startActivity(intent)
         }
 
+        binding.switchButton.setOnClickListener {
+            if (binding.calendarContainer.visibility == View.VISIBLE) {
+                binding.calendarContainer.visibility = View.GONE
+                binding.eventListContainer.visibility = View.VISIBLE
+            } else {
+                binding.calendarContainer.visibility = View.VISIBLE
+                binding.eventListContainer.visibility = View.GONE
+            }
+        }
 
         binding.swipeToRefresh.setOnRefreshListener {
-            userViewModel.getAllEventDates(preferenceManager.getVendorId().toString())
+            userViewModel.getAllEventDates(token,preferenceManager.getVendorId().toString())
             binding.swipeToRefresh.isRefreshing = false
         }
 
@@ -207,14 +243,27 @@ class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponse
             startActivity(intent)
         }
 
+        binding.eventMaster.setOnClickListener {
+            loadFragment(EventTypeMastersFragment())
 
+        }
 
+        binding.expense.setOnClickListener {
+            loadFragment(ExpensesFragment())
+        }
+
+        binding.packageMaster.setOnClickListener {
+            loadFragment(PackageMasterFragment())
+
+        }
 
     }
 
     override fun onResume() {
         super.onResume()
-        userViewModel.getAllEventDates(preferenceManager.getVendorId().toString())
+        userViewModel.getAllEventDates(token,preferenceManager.getVendorId().toString())
+        userViewModel.eventExposedToMe(token,preferenceManager.getVendorId().toString())
+
     }
 
     companion object {
@@ -227,6 +276,7 @@ class DashBoardFragment : Fragment(),IPaymentSuccessCallBack<TransactionResponse
             .addToBackStack(null)
             .commit()
     }
+
 
     override fun onPaymentFail(message: TransactionResponsesModel?) {
         Log.d("SABPAISA", "Payment Fail")

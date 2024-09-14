@@ -55,7 +55,7 @@
                     <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="@dimen/_50sdp"
                         android:layout_height="@dimen/_50sdp"
-                        android:src="@drawable/logo_new_new"
+                        android:src="@drawable/logo_new_events"
                         app:shapeAppearance="@style/CornerCut" />
 
                     <com.google.android.material.textview.MaterialTextView
@@ -64,7 +64,7 @@
                         android:layout_height="wrap_content"
                         android:padding="@dimen/_5sdp"
                         android:text="Company Name"
-                        android:textSize="@dimen/_14sdp" />
+                        android:textSize="@dimen/_12sdp" />
                 </LinearLayout>
 
                 <com.google.android.material.textview.MaterialTextView
@@ -93,7 +93,7 @@
                     android:layout_height="?android:attr/actionBarSize"
                     android:gravity="center"
                     android:text="INVOICE"
-                    android:textSize="@dimen/_20sdp"
+                    android:textSize="@dimen/_14sdp"
                     android:textStyle="bold" />
 
             </LinearLayout>
